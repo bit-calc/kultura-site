@@ -27,6 +27,7 @@ INDEXNOW_KEY = '7f3c9a51e2d84b6fa0c1d5e8b9a24c67'
 MAPS = 'https://maps.app.goo.gl/TiiG9uPdZeCiG7pJ8'
 IG = 'https://www.instagram.com/kultura.ba/'
 FB = 'https://www.facebook.com/profile.php?id=61591149431358'
+GSC_META = '<meta name="google-site-verification" content="7s5pBvu950L4dqgWdP1ySm9-_SQzntV4EEBasq_62UQ">'  # Search Console, KULTURA Google account
 
 # ------------------------------------------------------------------ data from the app
 APP = open(os.path.join(HERE, 'app.html'), encoding='utf-8').read()
@@ -498,6 +499,7 @@ def build_homes():
         sub(r'<meta property="og:locale" content="[^"]*">(<meta property="og:locale:alternate" content="[^"]*">)*',
             f'<meta property="og:locale" content="{OG_LOCALE[lang]}">' + ''.join(f'<meta property="og:locale:alternate" content="{OG_LOCALE[g]}">' for g in LANGS if g != lang))
         sub(r'<script type="application/ld\+json">.*?</script>', ld([salon_node(lang, full=True), {'@type': 'WebSite', '@id': DOMAIN + '/#website', 'url': DOMAIN + '/', 'name': 'KULTURA Beauty Studio', 'inLanguage': ['es', 'ru', 'en']}]), re.S)
+        h = h.replace('<meta charset="utf-8">', '<meta charset="utf-8">' + GSC_META, 1)
         if lang == 'es':
             h = h.replace('<meta charset="utf-8">', '<meta charset="utf-8">' + REDIRECT, 1)
         # script patches
