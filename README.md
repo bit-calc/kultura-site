@@ -1,3 +1,3 @@
 # KULTURA Beauty Studio
 
-Sitio web de KULTURA Beauty Studio, Microcentro, Buenos Aires — https://kultura.ar
+Sitio web de KULTURA Beauty Studio, Microcentro, Buenos Aires — https://kulturaba.com
