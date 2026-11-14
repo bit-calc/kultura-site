@@ -26,6 +26,7 @@ OG_LOCALE = {'es': 'es_AR', 'ru': 'ru_RU', 'en': 'en_US'}
 INDEXNOW_KEY = '7f3c9a51e2d84b6fa0c1d5e8b9a24c67'
 MAPS = 'https://maps.app.goo.gl/TiiG9uPdZeCiG7pJ8'
 IG = 'https://www.instagram.com/kultura.ba/'
+FB = 'https://www.facebook.com/profile.php?id=61591149431358'
 
 # ------------------------------------------------------------------ data from the app
 APP = open(os.path.join(HERE, 'app.html'), encoding='utf-8').read()
@@ -161,7 +162,7 @@ def salon_node(lang, full=True):
         'priceRange': '$$$', 'currenciesAccepted': 'ARS',
         'knowsLanguage': ['es', 'ru'],
         'areaServed': {'@type': 'City', 'name': 'Buenos Aires'},
-        'sameAs': [IG],
+        'sameAs': [IG, FB],
         'description': x('home_desc', lang),
     }
     if full:
@@ -213,7 +214,7 @@ def footer(lang):
 <div class="vfoot cap">
 <div><span class="mu">{e(t('v_a', lang))}</span><span>Tte. Gral. Juan D. Perón 683<br>Microcentro, Buenos Aires</span><a href="{MAPS}" target="_blank" rel="noopener" class="lnk">{e(t('v_map', lang))}</a></div>
 <div><span class="mu">{e(t('v_hl', lang))}</span><span>{e(t('f2v', lang))}</span><span class="mu2">{e(x('langs_spoken', lang))}</span></div>
-<div><span class="mu">{e(t('v_b', lang))}</span><a href="{e(wa(t('wa_hi', lang)))}" target="_blank" rel="noopener">WhatsApp +54 9 11 3762-6937</a><a href="{BOOK}" target="_blank" rel="noopener">{e(t('book_online', lang))}</a><a href="{IG}" target="_blank" rel="noopener">Instagram @kultura.ba</a></div>
+<div><span class="mu">{e(t('v_b', lang))}</span><a href="{e(wa(t('wa_hi', lang)))}" target="_blank" rel="noopener">WhatsApp +54 9 11 3762-6937</a><a href="{BOOK}" target="_blank" rel="noopener">{e(t('book_online', lang))}</a><a href="{IG}" target="_blank" rel="noopener">Instagram @kultura.ba</a><a href="{FB}" target="_blank" rel="noopener">Facebook</a></div>
 </div>
 </div>
 {link_index(lang)}
@@ -551,6 +552,7 @@ def build_misc():
           f'- Online booking: {BOOK}',
           '- Languages: Spanish and Russian; English with a translator',
           f'- Instagram: {IG}',
+          f'- Facebook: {FB}',
           '- Team: Roman (co-founder, head colourist), Valeria and Tatiana (manicure and pedicure), Sofía (lash extensions, 4 years’ experience, trains beginners), Nikolai (brow architecture, brow and lash lamination)',
           '- Prices in Argentine pesos from the studio booking system, November 2026', '',
           '## Servicios (español)', ''] + [svc_line(s, 'es') for s in SVC] + ['', '## Services (English)', ''] + [svc_line(s, 'en') for s in SVC] + \
