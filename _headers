@@ -1,2 +1,9 @@
 /_build/*
   X-Robots-Tag: noindex
+
+/img3/*
+  Access-Control-Allow-Origin: *
+
+/assets/gbp/*
+  Access-Control-Allow-Origin: *
+  X-Robots-Tag: noindex

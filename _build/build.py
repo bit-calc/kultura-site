@@ -538,7 +538,7 @@ def build_misc():
     rb.append(f'Sitemap: {DOMAIN}/sitemap.xml')
     write('/robots.txt', '\n'.join(rb) + '\n')
     # _headers (Cloudflare Pages)
-    write('/_headers', '/_build/*\n  X-Robots-Tag: noindex\n')
+    write('/_headers', '/_build/*\n  X-Robots-Tag: noindex\n\n/img3/*\n  Access-Control-Allow-Origin: *\n\n/assets/gbp/*\n  Access-Control-Allow-Origin: *\n  X-Robots-Tag: noindex\n')
     # IndexNow key
     write(f'/{INDEXNOW_KEY}.txt', INDEXNOW_KEY)
     # llms.txt
