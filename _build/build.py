@@ -466,7 +466,7 @@ def build_prod_hub():
                                [(x('home', lang), home_url(lang)), (t('n_shop', lang), alts[lang])]))
 
 # ------------------------------------------------------------------ homes (from the app)
-REDIRECT = '<script>(function(){if(location.pathname!=="/")return;var s=null;try{s=localStorage.getItem("kultura_lang")}catch(e){}if(s==="ru"||s==="en")location.replace("/"+s+"/"+location.hash)})();</script>'
+REDIRECT = '<script>(function(){if(location.pathname!=="/")return;var s=null;try{s=localStorage.getItem("kultura_lang")}catch(e){}if(!s){try{if(!/bot|crawl|spider|slurp|lighthouse|headless|preview/i.test(navigator.userAgent)){var l=(navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||""]).map(function(x){return String(x).toLowerCase().slice(0,2)});var r=l.indexOf("ru"),es=l.indexOf("es");if(r>-1&&(es<0||r<es))s="ru";else if(l[0]==="en"&&es<0)s="en"}}catch(e){}}if(s==="ru"||s==="en")location.replace("/"+s+"/"+location.hash)})();</script>'
 OLD_LANG_LINE = "let lang = LANGS.includes(store.get('kultura_lang')) ? store.get('kultura_lang') : 'es';"
 OLD_SWITCH = "if (lb){ lang = lb.dataset.lang; store.set('kultura_lang', lang); renderAll(); if (!$('#sheet').hidden) { const h = location.hash.slice(3); if (h) openSvc(h); } if (!$('#reader').hidden) { const h = location.hash.slice(3); if (h && location.hash.startsWith('#a-')) openArt(h); if (h && location.hash.startsWith('#p-')) openProd(h); } return; }"
 NEW_SWITCH = "if (lb){ store.set('kultura_lang', lb.dataset.lang); if (lb.dataset.lang !== lang) location.href = ({es:'/',ru:'/ru/',en:'/en/'})[lb.dataset.lang] + location.hash; return; }"

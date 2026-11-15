@@ -84,6 +84,16 @@ section[id],footer[id]{scroll-margin-top:56px}
 .bar nav a:hover{color:var(--hi)}
 .bar .btn{min-height:38px;padding:0 18px;font-size:12px}
 .burger{display:none;width:44px;height:44px;background:none;border:0;padding:0;cursor:pointer;align-items:center;justify-content:center}
+.hh-r{display:flex;align-items:center;gap:6px}
+.langs-m{display:none}
+
+/* ---------- floating WhatsApp ---------- */
+.wa-f{position:fixed;z-index:38;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));display:inline-flex;align-items:center;gap:9px;height:46px;padding:0 18px 0 15px;border-radius:999px;background:#000;color:var(--fg);border:1px solid rgba(238,234,226,.55);box-shadow:0 10px 28px rgba(0,0,0,.32);font:600 12px/1 var(--s);letter-spacing:.05em;text-decoration:none;opacity:0;visibility:hidden;transform:translateY(14px);pointer-events:none;transition:opacity .25s ease-out,transform .25s ease-out,background-color .2s ease,color .2s ease,visibility 0s linear .25s}
+.wa-f svg{flex:none}
+.wa-f.on{opacity:1;visibility:visible;transform:none;pointer-events:auto;transition-delay:0s}
+.wa-f:active{transform:scale(.97)}
+@media (hover:hover){.wa-f:hover{background:var(--fg);color:#000}}
+@media (min-width:761px){.wa-f{right:max(28px,env(safe-area-inset-right,0px));bottom:calc(28px + env(safe-area-inset-bottom,0px));height:50px;padding:0 22px 0 18px;font-size:13px}}
 
 /* ---------- menu overlay ---------- */
 .menu{position:fixed;inset:0;z-index:70;background:#000;display:flex;flex-direction:column;padding-top:calc(env(safe-area-inset-top,0px) + 14px);padding-bottom:calc(env(safe-area-inset-bottom,0px) + 24px);overflow-y:auto}
@@ -381,8 +391,14 @@ section[id],footer[id]{scroll-margin-top:56px}
 }
 @media (max-width:760px){
   .burger{display:inline-flex}
-  .bar .btn{margin-left:auto}
-  .bar .langs{display:none}
+  .bar-in{gap:10px}
+  .bar .btn{padding:0 14px}
+  .bar .langs{margin-left:auto}
+  .langs-m,.bar .langs,.menu .langs{display:flex;gap:0;padding:2px;border:1px solid rgba(238,234,226,.34);border-radius:999px}
+  .menu .langs{align-self:flex-start}
+  .langs-m button,.bar .langs button,.menu .langs button{min-width:38px;height:34px;padding:0 9px;border-radius:999px;color:var(--mute2);font:600 12px/1 var(--s);letter-spacing:.08em;transition:background-color .2s ease,color .2s ease}
+  .langs-m button[aria-pressed="true"],.bar .langs button[aria-pressed="true"],.menu .langs button[aria-pressed="true"]{background:var(--fg);color:#000}
+  .hh-r{margin-top:-4px}
   .hero{min-height:max(700px,100svh)}
   .hero-nav{display:none}
   .words{padding-top:clamp(110px,16vh,150px)}
@@ -413,12 +429,18 @@ section[id],footer[id]{scroll-margin-top:56px}
   .rent > *,.rent .ph,.rent-t{grid-column:1 / span 12}
   .rent .ph{width:62%}
   .shop-h > *,.shop-h h2,.shop-h div{grid-column:1 / span 12}
+  .big{font-size:clamp(44px,15.5vw,64px)}
+  #pro h2.big{font-size:clamp(34px,10.5vw,46px)}
+  .visit-t .big2{font-size:clamp(56px,20vw,84px)}
+  .big,.pc-t .nm,h3.d{overflow-wrap:break-word;hyphens:auto}
+  main,footer{overflow-x:clip}
   .feat,.jlist{grid-column:1 / span 12}
   .shop-h .pro-ht{grid-column:1 / span 12}
   .pgrid,.pgrid.pro,.pd-more .pgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
   .pc-t{padding:12px 12px 14px}
   .pc-t .nm{font-size:24px}
   .pc-t .f{display:none}
+  .pc-b{flex-wrap:wrap;row-gap:6px}
   .pro .pc-t .f{display:block}
   .pgrid.pro{grid-template-columns:1fr}
   .gift-strip{grid-template-columns:1fr;gap:12px}
@@ -436,6 +458,13 @@ section[id],footer[id]{scroll-margin-top:56px}
   .lbx-nv{top:auto;bottom:-58px;transform:none}
   .lbx-cap{padding:0 64px}
 }
+@media (max-width:440px){
+  .bar .mark span{display:none}
+}
+@media (max-width:370px){
+  .langs-m button,.bar .langs button{min-width:32px;padding:0 6px}
+  .bar-in{gap:8px}
+}
 @media (max-width:340px){
   .team{grid-template-columns:1fr}
 }
@@ -444,7 +473,8 @@ section[id],footer[id]{scroll-margin-top:56px}
   html{scroll-behavior:auto}
   .run,.spin,.wd,.strand path{animation:none}
   .strand path{stroke-dashoffset:0}
-  .bar,.sheet,.scrim,.reader,.lbx,.tile img,.badge{transition:none}
+  .bar,.sheet,.scrim,.reader,.lbx,.tile img,.badge,.wa-f,.langs button{transition:none}
+  .wa-f,.wa-f.on{transform:none}
 }
 .sp-index{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px 36px;padding-block:40px;border-top:1px solid var(--line)}.sp-index ul{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}.sp-index a{text-decoration:none;color:var(--mute2)}.sp-index a:hover{color:var(--hi)}.sp-index .sp-ih{color:var(--fg)}@media (max-width:760px){.sp-index{grid-template-columns:1fr}}</style>
 
@@ -502,6 +532,8 @@ section[id],footer[id]{scroll-margin-top:56px}
   </div>
 </div>
 
+<a class="wa-f js-wa" id="waFloat" href="https://wa.me/5491137626937?text=Hi%20KULTURA%2C%20I%E2%80%99d%20like%20to%20book%20an%20appointment" target="_blank" rel="noopener" data-ta="wa_float" aria-label="Message us on WhatsApp"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3.3c-3.9 0-7 2.7-7 6.1 0 1.7.8 3.2 2 4.3l-.6 3.1 3.4-1.5c.7.2 1.4.3 2.2.3 3.9 0 7-2.7 7-6.1s-3.1-6.2-7-6.2z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"></path></svg><span>WhatsApp</span></a>
+
 <main>
 <!-- ================= HERO ================= -->
 <section class="hero" id="top" aria-label="KULTURA Beauty Studio">
@@ -521,7 +553,10 @@ section[id],footer[id]{scroll-margin-top:56px}
       <a href="#visit" data-t="n_visit">Contact</a>
       <div class="langs" role="group" aria-label="Idioma"><button type="button" data-lang="es" aria-pressed="false">ES</button><button type="button" data-lang="ru" aria-pressed="false">RU</button><button type="button" data-lang="en" aria-pressed="true">EN</button></div>
     </nav>
-    <button class="burger js-menu" type="button" aria-label="Menú" aria-expanded="false" aria-controls="menu"><svg width="24" height="12" viewBox="0 0 24 12" aria-hidden="true"><path d="M0 1h24M0 11h24" stroke="currentColor" stroke-width="1.3"></path></svg></button>
+    <div class="hh-r">
+      <div class="langs langs-m" role="group" aria-label="Idioma"><button type="button" data-lang="es" aria-pressed="false">ES</button><button type="button" data-lang="ru" aria-pressed="false">RU</button><button type="button" data-lang="en" aria-pressed="true">EN</button></div>
+      <button class="burger js-menu" type="button" aria-label="Menú" aria-expanded="false" aria-controls="menu"><svg width="24" height="12" viewBox="0 0 24 12" aria-hidden="true"><path d="M0 1h24M0 11h24" stroke="currentColor" stroke-width="1.3"></path></svg></button>
+    </div>
   </div>
 
   <h1 class="words d g"><span class="wd">Kultura</span><span class="wd">Beauty</span><span class="wd">Studio</span></h1>
@@ -1965,7 +2000,8 @@ ARTS.splice(ARTS.findIndex(a => a.id === 'russian') + 1, 0, ART_4H);
 Object.assign(U, {
   wk_more:['Precio y detalles','Цена и подробности','Price and details'],
   ig:['Instagram','Instagram','Instagram'],
-  price:['Precio','Стоимость','Price']
+  price:['Precio','Стоимость','Price'],
+  wa_float:['Escribir por WhatsApp','Написать в WhatsApp','Message us on WhatsApp']
 });
 const GEN = {roman:'Романа', valeria:'Валерии', tatiana:'Татьяны', nikolai:'Николая', sofia:'Софии', yulia:'Юлии', elena:'Елены', kirill:'Кирилла'};
 const PAGES = {"svc": {"es": {"airtouch": "/servicios/airtouch/", "blond": "/servicios/rubio-total/", "contour": "/servicios/contouring/", "tone": "/servicios/tonalizacion/", "relief": "/servicios/camuflaje-de-canas/", "removal": "/servicios/remocion-de-color/", "cut": "/servicios/cortes/", "care": "/servicios/tratamientos/", "style": "/servicios/peinados/", "nails": "/servicios/manicura-rusa/", "pedi": "/servicios/pedicura-rusa/", "cuatro-manos": "/servicios/manicura-pedicura-cuatro-manos/", "lashes": "/servicios/extension-de-pestanas/", "brows": "/servicios/cejas/"}, "ru": {"airtouch": "/ru/uslugi/airtouch/", "blond": "/ru/uslugi/total-blond/", "contour": "/ru/uslugi/konturing/", "tone": "/ru/uslugi/tonirovanie/", "relief": "/ru/uslugi/kamuflirovanie-sediny/", "removal": "/ru/uslugi/smyvka/", "cut": "/ru/uslugi/strizhki/", "care": "/ru/uslugi/uhod-za-volosami/", "style": "/ru/uslugi/ukladka/", "nails": "/ru/uslugi/manikyur/", "pedi": "/ru/uslugi/pedikyur/", "cuatro-manos": "/ru/uslugi/manikyur-pedikyur-v-4-ruki/", "lashes": "/ru/uslugi/narashchivanie-resnits/", "brows": "/ru/uslugi/brovi/"}, "en": {"airtouch": "/en/services/airtouch/", "blond": "/en/services/total-blonde/", "contour": "/en/services/contouring/", "tone": "/en/services/toning/", "relief": "/en/services/grey-blending/", "removal": "/en/services/colour-removal/", "cut": "/en/services/haircuts/", "care": "/en/services/hair-treatments/", "style": "/en/services/styling/", "nails": "/en/services/russian-manicure/", "pedi": "/en/services/russian-pedicure/", "cuatro-manos": "/en/services/four-hand-manicure-pedicure/", "lashes": "/en/services/lash-extensions/", "brows": "/en/services/brows/"}}, "art": {"es": {"airtouch": "/blog/airtouch-no-es-mechas-ni-balayage/", "russian": "/blog/manicura-rusa-esmaltado-pegado-a-la-cuticula/", "cuatro-manos": "/blog/manicura-y-pedicura-a-cuatro-manos/", "grey": "/blog/camuflaje-de-canas-integrar-no-tapar/", "french": "/blog/manicura-francesa/", "lashes": "/blog/extension-de-pestanas-como-elegir-efecto/", "removal": "/blog/remocion-de-color-volver-a-un-tono-natural/", "layers": "/blog/corte-en-capas-volumen-sin-perder-largo/", "care": "/blog/cuidado-del-pelo-en-casa/", "nails": "/blog/diseno-de-unas-minimalismo-o-atrevido/", "salon-ruso": "/blog/salon-ruso-buenos-aires/", "balayage-precio": "/blog/balayage-buenos-aires-precio/", "tecnicas-aclarado": "/blog/airtouch-balayage-babylights-mechas-diferencias/", "rubio-amarillo": "/blog/por-que-el-rubio-se-pone-amarillo/", "kapping-gel": "/blog/kapping-soft-gel-unas-esculpidas-diferencias/", "pedicura-smart": "/blog/pedicura-rusa-smart-que-incluye/", "laminado": "/blog/laminado-de-cejas-y-pestanas-cuanto-dura/", "pestanas-cuidados": "/blog/extensiones-de-pestanas-cuanto-duran-cuidados/"}, "ru": {"airtouch": "/ru/blog/airtouch-ne-melirovanie-i-ne-shatush/", "russian": "/ru/blog/russkiy-manikyur/", "cuatro-manos": "/ru/blog/manikyur-i-pedikyur-v-4-ruki/", "grey": "/ru/blog/kamuflirovanie-sediny/", "french": "/ru/blog/french-manikyur/", "lashes": "/ru/blog/narashchivanie-resnits-kak-vybrat-effekt/", "removal": "/ru/blog/smyvka-tsveta-volos/", "layers": "/ru/blog/strizhka-sloi-obem-bez-poteri-dliny/", "care": "/ru/blog/uhod-za-volosami-doma/", "nails": "/ru/blog/dizayn-nogtey/", "salon-ruso": "/ru/blog/russkiy-salon-krasoty-buenos-ayres/", "balayage-precio": "/ru/blog/shatush-balayazh-buenos-ayres-tsena/", "tecnicas-aclarado": "/ru/blog/airtouch-shatush-melirovanie-raznitsa/", "rubio-amarillo": "/ru/blog/pochemu-zhelteet-blond/", "kapping-gel": "/ru/blog/ukreplenie-ili-narashchivanie-nogtey/", "pedicura-smart": "/ru/blog/smart-pedikyur-chto-vkhodit/", "laminado": "/ru/blog/laminirovanie-brovey-i-resnits/", "pestanas-cuidados": "/ru/blog/narashchennye-resnitsy-skolko-derzhatsya-ukhod/"}, "en": {"airtouch": "/en/blog/airtouch-is-not-highlights-or-balayage/", "russian": "/en/blog/russian-manicure-explained/", "cuatro-manos": "/en/blog/four-hand-manicure-and-pedicure/", "grey": "/en/blog/grey-blending-not-covering/", "french": "/en/blog/french-manicure/", "lashes": "/en/blog/lash-extensions-choosing-your-effect/", "removal": "/en/blog/hair-colour-removal/", "layers": "/en/blog/layered-haircut-volume-without-losing-length/", "care": "/en/blog/hair-care-at-home/", "nails": "/en/blog/nail-art-minimal-or-bold/", "salon-ruso": "/en/blog/russian-beauty-salon-buenos-aires/", "balayage-precio": "/en/blog/balayage-buenos-aires-price/", "tecnicas-aclarado": "/en/blog/airtouch-balayage-babylights-highlights-differences/", "rubio-amarillo": "/en/blog/why-blonde-hair-turns-yellow/", "kapping-gel": "/en/blog/gel-overlay-soft-gel-or-sculpted-nails/", "pedicura-smart": "/en/blog/russian-smart-pedicure-what-is-included/", "laminado": "/en/blog/brow-and-lash-lamination-how-long-it-lasts/", "pestanas-cuidados": "/en/blog/lash-extensions-how-long-they-last-aftercare/"}}, "t": {"svc_page": ["Todo sobre el servicio y preguntas frecuentes", "Всё об услуге и частые вопросы", "All about this service and FAQ"]}};
@@ -2285,7 +2321,8 @@ $('#copyTel').addEventListener('click', () => {
 
 /* fixed bar after the hero */
 const bar = $('#bar');
-new IntersectionObserver(([en]) => bar.classList.toggle('on', !en.isIntersecting), {rootMargin:'-140px 0px 0px 0px'}).observe($('.hero'));
+const waF = $('#waFloat');
+new IntersectionObserver(([en]) => { bar.classList.toggle('on', !en.isIntersecting); waF.classList.toggle('on', !en.isIntersecting); }, {rootMargin:'-140px 0px 0px 0px'}).observe($('.hero'));
 
 /* before / after videos: play in view, honour reduced motion */
 const vids = ['vBefore','vAfter'].map(id => document.getElementById(id));
