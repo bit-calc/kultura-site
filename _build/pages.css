@@ -111,3 +111,4 @@ body.sp{padding-top:calc(58px + env(safe-area-inset-top,0px))}
 .sp-promo .pl s{color:var(--pmute);margin-left:8px;white-space:nowrap}
 .sp-promo .pl .pr{flex:none;text-align:right}
 .sp-promo .acts{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+.sp-art .sp-promo{width:min(680px,100%);margin:44px auto 0}

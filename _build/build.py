@@ -18,7 +18,13 @@ from articles_new import ARTICLES_NEW                     # noqa: E402
 DOMAIN = 'https://kulturaba.com'
 TODAY = '2026-11-14'
 # pages whose content changed later (key: Spanish URL of the page group) -> date for sitemap <lastmod>
-LASTMOD = {'/': '2026-11-18', '/servicios/manicura-rusa/': '2026-11-18', '/servicios/pedicura-rusa/': '2026-11-18', '/servicios/manicura-pedicura-cuatro-manos/': '2026-11-18'}
+LASTMOD = {'/': '2026-11-18', '/servicios/manicura-rusa/': '2026-11-18', '/servicios/pedicura-rusa/': '2026-11-18', '/servicios/manicura-pedicura-cuatro-manos/': '2026-11-18',
+           '/blog/diseno-de-unas-minimalismo-o-atrevido/': '2026-11-18',
+           '/blog/kapping-soft-gel-unas-esculpidas-diferencias/': '2026-11-18',
+           '/blog/manicura-francesa/': '2026-11-18',
+           '/blog/manicura-rusa-esmaltado-pegado-a-la-cuticula/': '2026-11-18',
+           '/blog/manicura-y-pedicura-a-cuatro-manos/': '2026-11-18',
+           '/blog/pedicura-rusa-smart-que-incluye/': '2026-11-18'}
 LANGS = ['es', 'ru', 'en']
 PFX = {'es': '', 'ru': '/ru', 'en': '/en'}
 SEG = {'svc': {'es': 'servicios', 'ru': 'uslugi', 'en': 'services'},
@@ -410,7 +416,7 @@ def build_articles():
 <h1 class="d">{e(L(a['t'], lang))}</h1><p class="lead it">{e(L(a['l'], lang))}</p></header>
 <div class="rd-img"><div class="ph"><img src="/{a['img']}" alt="{e(L(a['t'], lang))}" style="object-position:{a.get('pos', '50% 50%')}"></div></div>
 <div class="rd-body">{bhtml}{faq_html(faqs, lang)}</div>
-<div class="rd-cta"><p class="d">{e(t('rd_cta', lang))}</p><div style="display:flex;flex-wrap:wrap;gap:10px"><a class="btn" href="{BOOK}" target="_blank" rel="noopener">{e(t('sh_book', lang))}</a>{cta2}</div></div>
+{promo_card(svc, lang) if svc else ''}<div class="rd-cta"><p class="d">{e(t('rd_cta', lang))}</p><div style="display:flex;flex-wrap:wrap;gap:10px"><a class="btn" href="{BOOK}" target="_blank" rel="noopener">{e(t('sh_book', lang))}</a>{cta2}</div></div>
 <div class="rd-next"><a href="{art_url(nx['id'], lang)}"><span class="cap mu">{e(t('rd_next', lang))}</span><span class="d">{e(L(nx['t'], lang))}</span></a></div>
 </article>'''
             author = ({'@type': 'Person', 'name': 'Roman', 'jobTitle': L(a['by'], lang)} if 'Roman' in L(a['by'], 'en')
