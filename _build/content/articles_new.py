@@ -19,7 +19,7 @@ ARTICLES_NEW = [
           'en':'Russian beauty salon in Buenos Aires | KULTURA'},
  'desc':{'es':'KULTURA es un salón de belleza ruso en Microcentro: manicura rusa, pedicura SMART, color, cortes, pestañas y cejas con la escuela rusa. Atención en español y ruso.',
          'ru':'KULTURA — русский салон красоты в Микроцентро, Буэнос-Айрес: русский маникюр, SMART-педикюр, окрашивание, стрижки, ресницы и брови. Говорим по-русски и по-испански.',
-         'en':'KULTURA is a Russian beauty salon in Microcentro, Buenos Aires: Russian manicure, SMART pedicure, colour, cuts, lashes and brows. Spanish and Russian; English with a translator.'},
+         'en':'KULTURA is a Russian beauty salon in Microcentro, Buenos Aires: Russian manicure, SMART pedicure, colour, cuts, lashes and brows. We speak Spanish and Russian.'},
  'b':{
   'es':[
    ('h','Una escuela con nombre propio'),
@@ -357,8 +357,8 @@ ARTICLES_NEW = [
           'ru':'Укрепление или наращивание ногтей: что выбрать | KULTURA',
           'en':'Gel overlay vs soft gel vs sculpted nails | KULTURA'},
  'desc':{'es':'Qué es el kapping, el soft gel y las uñas esculpidas en gel, cuánto duran y cuál conviene. En KULTURA: manicura rusa con refuerzo $64.500, extensión en gel $92.000.',
-         'ru':'Чем отличаются укрепление гелем, гелевые типсы и наращивание, сколько держатся и что выбрать. В KULTURA: русский маникюр с укреплением — 64 500 ARS, наращивание — 92 000 ARS.',
-         'en':'What a gel overlay, soft gel tips and sculpted gel nails are, how long they last and which to pick. At KULTURA: Russian manicure with strengthening ARS 64,500, gel extensions ARS 92,000.'},
+         'ru':'Укрепление гелем, гелевые типсы или наращивание: чем отличаются, сколько держатся и что выбрать. В KULTURA: с укреплением — 64 500 ARS, наращивание — 92 000 ARS.',
+         'en':'Gel overlay, soft gel tips or sculpted nails: how they differ, how long they last and which to pick. At KULTURA: strengthening ARS 64,500, extensions ARS 92,000.'},
  'b':{
   'es':[
    ('h','Kapping: reforzar sin alargar'),
@@ -506,7 +506,7 @@ ARTICLES_NEW = [
  'title':{'es':'Laminado de cejas: qué es, cuánto dura y cuidados | KULTURA',
           'ru':'Ламинирование бровей и ресниц: сколько держится | KULTURA',
           'en':'Brow lamination: what it is, how long it lasts | KULTURA'},
- 'desc':{'es':'Qué es el laminado de cejas y de pestañas, cuánto dura, para quién es, cuidados de las primeras 24 horas y cómo se combina con el perfilado. Con Nikolai en Microcentro.',
+ 'desc':{'es':'Qué es el laminado de cejas y de pestañas, cuánto dura, para quién es, cuidados de las primeras 24 horas y cómo se combina con el perfilado. Con Nikolai.',
          'ru':'Что такое ламинирование бровей и ресниц, сколько держится, кому подходит, уход в первые сутки и как сочетать с коррекцией. Николай, Микроцентро.',
          'en':'What brow and lash lamination are, how long they last, who they suit, aftercare for the first 24 hours and pairing with shaping. With Nikolai in Microcentro.'},
  'b':{

@@ -14,11 +14,14 @@ ROOT = os.path.dirname(HERE)
 sys.path.insert(0, os.path.join(HERE, 'content'))
 from services_seo import SERVICES, ARTICLE_SLUGS          # noqa: E402
 from articles_new import ARTICLES_NEW                     # noqa: E402
+from articles_batch2 import ARTICLES_B2                   # noqa: E402
 
 DOMAIN = 'https://kulturaba.com'
 TODAY = '2026-11-14'
 # pages whose content changed later (key: Spanish URL of the page group) -> date for sitemap <lastmod>
 LASTMOD = {'/': '2026-11-18', '/servicios/manicura-rusa/': '2026-11-18', '/servicios/pedicura-rusa/': '2026-11-18', '/servicios/manicura-pedicura-cuatro-manos/': '2026-11-18',
+           '/blog/': '2026-11-18', '/blog/manicura-rusa-precio-buenos-aires/': '2026-11-18', '/blog/manicura-rusa-o-semipermanente-diferencias/': '2026-11-18',
+           '/blog/manicura-en-microcentro/': '2026-11-18', '/blog/como-retirar-semipermanente-sin-danar-la-una/': '2026-11-18',
            '/blog/diseno-de-unas-minimalismo-o-atrevido/': '2026-11-18',
            '/blog/kapping-soft-gel-unas-esculpidas-diferencias/': '2026-11-18',
            '/blog/manicura-francesa/': '2026-11-18',
@@ -113,9 +116,12 @@ X = {
  'home_title': ['KULTURA · Salón de belleza ruso en Microcentro, Buenos Aires',
                 'KULTURA — русский салон красоты в Буэнос-Айресе',
                 'KULTURA · Russian beauty salon in Microcentro, Buenos Aires'],
- 'home_desc': ['Salón de belleza ruso en Microcentro, Buenos Aires: AirTouch, rubio total, cortes, manicura rusa, pedicura SMART, a cuatro manos, extensión de pestañas, cejas y laminado. Partner oficial de Schwarzkopf Professional.',
-               'Русский салон красоты в Микроцентро, Буэнос-Айрес: AirTouch, тотал блонд, стрижки, русский маникюр, SMART-педикюр, маникюр в 4 руки, наращивание ресниц, брови и ламинирование. Официальный партнёр Schwarzkopf Professional.',
-               'Russian beauty salon in Microcentro, Buenos Aires: AirTouch, total blonde, cuts, Russian manicure, SMART pedicure, four-hand mani-pedi, lash extensions, brows and lamination. Official Schwarzkopf Professional partner.'],
+ 'home_desc': ['Salón de belleza ruso en Microcentro, Buenos Aires: AirTouch, rubio total, cortes, manicura rusa, pedicura SMART, pestañas y cejas. Partner oficial de Schwarzkopf.',
+               'Русский салон красоты в Микроцентро, Буэнос-Айрес: AirTouch, тотал блонд, стрижки, русский маникюр, SMART-педикюр, ресницы и брови. Партнёр Schwarzkopf Professional.',
+               'Russian beauty salon in Microcentro, Buenos Aires: AirTouch, total blonde, cuts, Russian manicure, SMART pedicure, lashes and brows. Official Schwarzkopf partner.'],
+ 'blog_desc': ['Journal de KULTURA: técnicas de color, manicura rusa, pedicura SMART, pestañas y cejas, cuidado del pelo y respuestas a lo que más nos preguntan en el estudio.',
+               'Журнал KULTURA: техники окрашивания, русский маникюр, SMART-педикюр, ресницы и брови, уход за волосами и ответы на частые вопросы клиентов студии.',
+               'KULTURA Journal: colour techniques, Russian manicure, SMART pedicure, lashes and brows, hair care and answers to what we’re asked most in the studio.'],
  'nf': ['Página no encontrada', 'Страница не найдена', 'Page not found'],
 }
 def x(k, lang): return X[k][LANGS.index(lang)]
@@ -125,12 +131,45 @@ def home_url(lang): return PFX[lang] + '/'
 def hub(kind, lang): return f"{PFX[lang]}/{SEG[kind][lang]}/"
 def svc_url(sid, lang): return f"{hub('svc', lang)}{SERVICES[sid]['slug'][lang]}/"
 
+# meta descriptions for the Journal articles that live in app.html (their lead is too short for a search snippet)
+ART_DESC = {
+ 'airtouch': {'es': 'AirTouch no es mechas ni balayage: Roman, colorista principal de KULTURA en Buenos Aires, explica el método, la corrección, el tiempo y el precio.',
+              'ru': 'Чем AirTouch отличается от мелирования и балаяжа: метод, коррекция, время и цена. Рассказывает Роман, главный колорист KULTURA в Буэнос-Айресе.',
+              'en': 'AirTouch isn’t highlights or balayage: Roman, head colourist at KULTURA in Buenos Aires, explains the method, the touch-up, timing and price.'},
+ 'russian': {'es': 'Manicura rusa en Buenos Aires: cómo se trabaja con torno, por qué el color queda pegado a la cutícula y cómo hacer que dure. En KULTURA, Microcentro.',
+             'ru': 'Русский маникюр в Буэнос-Айресе: как устроена аппаратная техника, почему покрытие ложится у самой кутикулы и как продлить носку. Студия KULTURA.',
+             'en': 'Russian manicure in Buenos Aires: how the e-file technique works, why colour sits right up to the cuticle and how to make it last. KULTURA, Microcentro.'},
+ 'cuatro-manos': {'es': 'Manicura rusa y pedicura SMART al mismo tiempo con dos maestras, en unas dos horas y media: qué incluye, para quién es, precio y cómo reservar en KULTURA.',
+                  'ru': 'Русский маникюр и SMART-педикюр одновременно у двух мастеров, примерно за два с половиной часа: что входит, кому подойдёт, цена и как записаться.',
+                  'en': 'Russian manicure and SMART pedicure at the same time with two artists, in about two and a half hours: what’s included, who it’s for, price and booking.'},
+ 'grey': {'es': 'Camuflaje de canas en Buenos Aires: cómo integrar las canas sin una línea marcada de crecimiento, qué tonos se usan y cuánto cuesta en KULTURA, Microcentro.',
+          'ru': 'Камуфлирование седины в Буэнос-Айресе: как объединить седину с цветом без резкой границы отрастания, какие оттенки подходят и сколько это стоит.',
+          'en': 'Grey blending in Buenos Aires: how to blend grey without a hard regrowth line, which shades are used and what it costs at KULTURA, Microcentro.'},
+ 'french': {'es': 'Manicura francesa: variantes del clásico, cómo la forma de la uña cambia el resultado y cuánto dura. Con manicura rusa en KULTURA, Microcentro, Buenos Aires.',
+            'ru': 'Френч: варианты классики, как форма ногтя меняет результат и сколько держится покрытие. Русский маникюр в студии KULTURA, Микроцентро, Буэнос-Айрес.',
+            'en': 'French manicure: variations on the classic, how nail shape changes the result and how long it lasts. Russian manicure at KULTURA, Microcentro, Buenos Aires.'},
+ 'lashes': {'es': 'Extensión de pestañas en Buenos Aires: efectos muñeca, zorro, ardilla y anime, materiales, cuidados y cómo elegir el tuyo. Con Sofía en KULTURA, Microcentro.',
+            'ru': 'Наращивание ресниц в Буэнос-Айресе: кукольный, лисий, беличий и аниме-эффекты, материалы, уход и как выбрать свой. Мастер София, студия KULTURA.',
+            'en': 'Lash extensions in Buenos Aires: doll, fox, squirrel and anime effects, materials, aftercare and how to choose yours. With Sofía at KULTURA, Microcentro.'},
+ 'removal': {'es': 'Remoción de color en Buenos Aires: cómo sacar el color acumulado y volver a un tono natural cuidando la calidad del pelo. Por dónde empezar y qué sigue.',
+             'ru': 'Смывка цвета в Буэнос-Айресе: как убрать накопленный цвет и вернуться к натуральному оттенку, сохранив качество волос. С чего начать и что после.',
+             'en': 'Colour removal in Buenos Aires: how to lift built-up colour and return to a natural shade while keeping the hair healthy. Where to start and what’s next.'},
+ 'layers': {'es': 'Corte en capas y coloración con relieve: dos técnicas de Roman, colorista principal de KULTURA en Buenos Aires, que dan volumen y movimiento sin perder largo.',
+            'ru': 'Стрижка слоями и рельефное окрашивание: две техники Романа, главного колориста KULTURA в Буэнос-Айресе, которые дают объём и движение без потери длины.',
+            'en': 'Layered cuts and relief colouring: two techniques by Roman, head colourist at KULTURA in Buenos Aires, that add volume and movement without losing length.'},
+ 'care': {'es': 'Cuidado del pelo en casa: cómo elegir los productos según lo que tu pelo necesita y qué hay en los estantes de KULTURA, partner de Schwarzkopf Professional.',
+          'ru': 'Домашний уход за волосами: как подобрать средства под задачу и что стоит на полках KULTURA — официального партнёра Schwarzkopf Professional.',
+          'en': 'Hair care at home: how to choose products for what your hair needs and what’s on the shelves at KULTURA, an official Schwarzkopf Professional partner.'},
+ 'nails': {'es': 'Diseño de uñas en Buenos Aires: del nude minimalista al stamping, los sliders y los stickers. Qué se puede hacer y cuánto cuesta en KULTURA, Microcentro.',
+           'ru': 'Дизайн ногтей в Буэнос-Айресе: от минималистичного нюда до стемпинга, слайдеров и стикеров. Что можно сделать и сколько это стоит в студии KULTURA.',
+           'en': 'Nail art in Buenos Aires: from minimal nude to stamping, decals and stickers. What’s possible and what it costs at KULTURA, Microcentro.'},
+}
 ALL_ARTS = []   # unified list: dict(id, slug, img, pos, min, svc, k, t, l, by, b, date, title, desc, new)
 for a in ARTS:
     ALL_ARTS.append(dict(id=a['id'], slug=ARTICLE_SLUGS[a['id']], img=a['img'], pos=a.get('pos', '50% 50%'), min=a['min'],
                          svc=a.get('svc'), k=a['k'], t=a['t'], l=a['l'], by=a['by'], b=a['b'], date='2026-11-13',
-                         title={g: L(a['t'], g) + ' | KULTURA' for g in LANGS}, desc={g: L(a['l'], g) for g in LANGS}, new=False))
-for a in ARTICLES_NEW:
+                         title={g: L(a['t'], g) + ' | KULTURA' for g in LANGS}, desc={g: ART_DESC.get(a['id'], {}).get(g) or L(a['l'], g) for g in LANGS}, new=False))
+for a in ARTICLES_B2 + ARTICLES_NEW:   # newest batch first in the Journal
     d = dict(a); d['new'] = True
     if d['id'] == 'salon-ruso': d['svc'] = None
     ALL_ARTS.append(d)
@@ -422,7 +461,7 @@ def build_articles():
             author = ({'@type': 'Person', 'name': 'Roman', 'jobTitle': L(a['by'], lang)} if 'Roman' in L(a['by'], 'en')
                       else {'@type': 'Organization', 'name': 'KULTURA Beauty Studio', '@id': SALON_ID})
             art_node = {'@type': 'BlogPosting', 'headline': L(a['t'], lang), 'description': a['desc'][lang], 'image': img_abs(a['img']),
-                        'datePublished': a['date'], 'dateModified': TODAY, 'inLanguage': lang, 'url': abs_url(alts[lang]),
+                        'datePublished': a['date'], 'dateModified': max(a['date'], LASTMOD.get(alts['es'], TODAY)), 'inLanguage': lang, 'url': abs_url(alts[lang]),
                         'mainEntityOfPage': abs_url(alts[lang]), 'author': author,
                         'publisher': {'@type': 'Organization', 'name': 'KULTURA Beauty Studio', 'logo': {'@type': 'ImageObject', 'url': DOMAIN + '/apple-touch-icon.png'}}}
             if svc: art_node['about'] = {'@type': 'Service', 'name': L(svc['name'], lang), 'url': abs_url(svc_url(svc['id'], lang))}
@@ -441,7 +480,7 @@ def build_blog_hub():
         nodes = [salon_node(lang, full=False), {'@type': 'Blog', 'name': 'KULTURA Journal', 'url': abs_url(alts[lang]), 'inLanguage': lang,
                  'blogPost': [{'@type': 'BlogPosting', 'headline': L(a['t'], lang), 'url': abs_url(art_url(a['id'], lang))} for a in order]}]
         title = {'es': 'Journal · Color, uñas, pestañas y cejas | KULTURA', 'ru': 'Журнал KULTURA · Окрашивание, ногти, ресницы, брови', 'en': 'Journal · Colour, nails, lashes and brows | KULTURA'}[lang]
-        write(alts[lang], page(lang, alts[lang], alts, title, x('blog_lead', lang), body, nodes, None, 'website',
+        write(alts[lang], page(lang, alts[lang], alts, title, x('blog_desc', lang), body, nodes, None, 'website',
                                [(x('home', lang), home_url(lang)), (t('n_journal', lang), alts[lang])]))
 
 # ------------------------------------------------------------------ products
@@ -477,7 +516,10 @@ def build_products():
                                 'url': abs_url(alts[lang]), 'seller': {'@id': SALON_ID}}}
             if not p.get('noimg'): pnode['image'] = img_abs(p['img'])
             title = f"{line['name']} {p['n']} {L(p['ty'], lang)} {p['vol']} · {'Precio' if lang == 'es' else 'Цена' if lang == 'ru' else 'Price'} | KULTURA"
+            if len(title) > 62: title = f"{line['name']} {p['n']} {L(p['ty'], lang)} {p['vol']} | KULTURA"
             desc = f"{L(p['s'], lang)} {fmt(p['price'], lang)}."
+            tail = {'es': ' Schwarzkopf Professional en KULTURA, Microcentro, Buenos Aires.', 'ru': ' Schwarzkopf Professional в студии KULTURA, Буэнос-Айрес.', 'en': ' Schwarzkopf Professional at KULTURA, Microcentro, Buenos Aires.'}[lang]
+            if len(desc) + len(tail) <= 160: desc += tail
             crumbs = [(x('home', lang), home_url(lang)), (t('n_shop', lang), hub('prod', lang)), (line['name'] + ' ' + p['n'], alts[lang])]
             write(alts[lang], page(lang, alts[lang], alts, title, desc[:160], body, [salon_node(lang, full=False), pnode],
                                    None if p.get('noimg') else img_abs(p['img']), 'product', crumbs))
@@ -491,7 +533,7 @@ def build_prod_hub():
             items = ''.join(f'''<li><a href="{prod_url(p['id'], lang)}"><span class="d">{e(p['n'])}</span><small class="cap mu">{e(L(p['ty'], lang))} · {e(p['vol'])} · {e(fmt(p['price'], lang))}</small></a></li>''' for p in PRODS if p['line'] == l['id'])
             if items: secs.append(f'<h2 class="d" id="{l["id"]}">{e(l["name"])}</h2><p class="mu2">{e(L(l["lead"], lang))}</p><ul class="sp-list">{items}</ul>')
         body = f'<section class="sp-hub g w"><h1 class="d big">{e(t("n_shop", lang))}</h1><p class="lead it">{e(x("prod_lead", lang))}</p>{"".join(secs)}</section>'
-        title = {'es': 'Productos Schwarzkopf Professional en Buenos Aires · Precios | KULTURA', 'ru': 'Продукция Schwarzkopf Professional в Буэнос-Айресе | KULTURA', 'en': 'Schwarzkopf Professional products in Buenos Aires | KULTURA'}[lang]
+        title = {'es': 'Productos Schwarzkopf Professional en Buenos Aires | KULTURA', 'ru': 'Продукция Schwarzkopf Professional в Буэнос-Айресе | KULTURA', 'en': 'Schwarzkopf Professional products in Buenos Aires | KULTURA'}[lang]
         nodes = [salon_node(lang, full=False), {'@type': 'CollectionPage', 'name': t('n_shop', lang), 'url': abs_url(alts[lang])}]
         write(alts[lang], page(lang, alts[lang], alts, title, x('prod_lead', lang)[:158], body, nodes, None, 'website',
                                [(x('home', lang), home_url(lang)), (t('n_shop', lang), alts[lang])]))
