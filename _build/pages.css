@@ -100,3 +100,14 @@ body.sp{padding-top:calc(58px + env(safe-area-inset-top,0px))}
   .sp-prod .sp-svc-ph .ph{aspect-ratio:1/1}
   .sp-index{grid-template-columns:1fr}
 }
+
+/* nail promo card (hidden automatically after the end date) */
+.sp-promo{background:var(--paper);color:var(--ink);padding:22px 24px 24px;display:flex;flex-direction:column;gap:10px}
+.sp-promo .k{margin:0;color:var(--pmute)}
+.sp-promo .h{margin:0;font-size:clamp(32px,3.6vw,46px);line-height:1;text-wrap:balance}
+.sp-promo .p{margin:0;font-size:16px;line-height:1.5;color:#2a2927}
+.sp-promo .pl{margin:2px 0 0;display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:10px 0;border-top:1px solid var(--pline);border-bottom:1px solid var(--pline)}
+.sp-promo .pl b{font-weight:700;white-space:nowrap}
+.sp-promo .pl s{color:var(--pmute);margin-left:8px;white-space:nowrap}
+.sp-promo .pl .pr{flex:none;text-align:right}
+.sp-promo .acts{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}

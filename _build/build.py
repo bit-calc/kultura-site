@@ -17,6 +17,8 @@ from articles_new import ARTICLES_NEW                     # noqa: E402
 
 DOMAIN = 'https://kulturaba.com'
 TODAY = '2026-11-14'
+# pages whose content changed later (key: Spanish URL of the page group) -> date for sitemap <lastmod>
+LASTMOD = {'/': '2026-11-18', '/servicios/manicura-rusa/': '2026-11-18', '/servicios/pedicura-rusa/': '2026-11-18', '/servicios/manicura-pedicura-cuatro-manos/': '2026-11-18'}
 LANGS = ['es', 'ru', 'en']
 PFX = {'es': '', 'ru': '/ru', 'en': '/en'}
 SEG = {'svc': {'es': 'servicios', 'ru': 'uslugi', 'en': 'services'},
@@ -310,6 +312,28 @@ def cta_buttons(s, lang):
     w = f'<a class="btn btn-o" href="{e(wa(t("wa_svc", lang) + L(s["name"], lang)))}" target="_blank" rel="noopener">WhatsApp</a>'
     return w + book if s.get('wa') else book + w
 
+# ------------------------------------------------------------------ nail promo (first nail visit −15% + 15% in points, until 15.12.2026)
+# Terms come from the studio owner (16.11.2026). The block hides itself after PROMO_UNTIL, so nothing stale stays online.
+PROMO_UNTIL = '2026-12-16T00:00:00-03:00'
+PROMO_SVC = {'nails': 'mr', 'pedi': None, 'cuatro-manos': 'm4'}   # service id -> price row shown with the discount
+PROMO_HIDE = '<script>document.querySelectorAll("[data-until]").forEach(function(n){if(Date.now()>Date.parse(n.dataset.until))n.remove()})</script>'
+
+def promo_card(s, lang):
+    if s['id'] not in PROMO_SVC: return ''
+    row = PROMO_SVC[s['id']]
+    line = ''
+    if row:
+        full = R[row][1]; off = round(full * 0.85)
+        line = f'<p class="cap pl"><span>{e(L(R[row][0], lang))}</span><span class="pr"><b>{e(fmt(off, lang))}</b><s>{e(fmt(full, lang))}</s></span></p>'
+    msg = t('wa_promo', lang) + ': ' + L(s['name'], lang)
+    return f'''<div class="sp-promo on-paper" data-until="{PROMO_UNTIL}">
+<p class="cap k">{e(t('pr_k', lang))}</p>
+<p class="d h">{e(t('pr_h', lang))}</p>
+<p class="p">{e(t('pr_p', lang))}</p>
+{line}
+<div class="acts"><a class="btn" href="{e(wa(msg))}" target="_blank" rel="noopener">{e(t('pr_btn', lang))}</a></div>
+</div>{PROMO_HIDE}'''
+
 # ------------------------------------------------------------------ service pages
 def build_services():
     for s in SVC:
@@ -331,7 +355,7 @@ def build_services():
 <div class="sp-svc-t">
 <p class="cap mu">{e(t('g_hair', lang) if s['g'] == 'hair' else t('g_hands', lang))}</p>
 <h1 class="d">{e(seo['h1'][lang])}</h1>
-<p class="lead it">{e(L(s['lead'], lang))}</p>
+<p class="lead it">{e(L(s['lead'], lang))}</p>{promo_card(s, lang)}
 <div class="sp-txt">{''.join(f'<p>{e(p)}</p>' for p in L(s['body'], lang))}</div>
 <div class="sp-card on-paper"><h2 class="cap">{e(x('prices', lang))}</h2><p class="cap who-l">{e(who_line(s['who'], lang))}</p><div class="rows">{rows_html}</div>
 <div class="acts">{cta_buttons(s, lang)}</div></div>
@@ -515,6 +539,8 @@ def build_homes():
         h = h.replace('<div class="pgrid" id="shop-grid"></div>', f'<div class="pgrid" id="shop-grid"></div><p class="cap" style="margin:20px 0 0"><a class="lnk" href="{hub("prod", lang)}">{e(x("prod_hub_link", lang))} →</a></p>', 1)
         h = h.replace('<div class="legal g cap mu">', link_index(lang) + '<div class="legal g cap mu">', 1)
         h = h.replace('</style>', PAGES_CSS_HOME + '</style>', 1)
+        assert 'id="promoMore" href="#services"' in h, 'promo block changed: update build.py'
+        h = h.replace('id="promoMore" href="#services"', f'id="promoMore" href="{svc_url("nails", lang)}"', 1)
         write(alts[lang], h)
 
 PAGES_CSS_HOME = '.sp-index{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px 36px;padding-block:40px;border-top:1px solid var(--line)}.sp-index ul{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}.sp-index a{text-decoration:none;color:var(--mute2)}.sp-index a:hover{color:var(--hi)}.sp-index .sp-ih{color:var(--fg)}@media (max-width:760px){.sp-index{grid-template-columns:1fr}}'
@@ -529,7 +555,7 @@ def build_misc():
     for alts in SITEMAP:
         for g in LANGS:
             links = ''.join(f'<xhtml:link rel="alternate" hreflang="{h}" href="{abs_url(alts[h])}"/>' for h in LANGS) + f'<xhtml:link rel="alternate" hreflang="x-default" href="{abs_url(alts["es"])}"/>'
-            out.append(f'<url><loc>{abs_url(alts[g])}</loc><lastmod>{TODAY}</lastmod>{links}</url>')
+            out.append(f'<url><loc>{abs_url(alts[g])}</loc><lastmod>{LASTMOD.get(alts['es'], TODAY)}</lastmod>{links}</url>')
     out.append('</urlset>')
     write('/sitemap.xml', '\n'.join(out) + '\n')
     # robots
@@ -558,7 +584,8 @@ def build_misc():
           f'- Facebook: {FB}',
           f'- Telegram: {TG}',
           '- Team: Roman (co-founder, head colourist), Valeria and Tatiana (manicure and pedicure), Sofía (lash extensions, 4 years’ experience, trains beginners), Nikolai (brow architecture, brow and lash lamination)',
-          '- Prices in Argentine pesos from the studio booking system, November 2026', '',
+          '- Prices in Argentine pesos from the studio booking system, November 2026',
+          '- Nail offer until 15 December 2026: 15% off the first nail visit (manicure, pedicure, four-hand manicure and pedicure) plus another 15% back in points for the next visit. Booking by WhatsApp.', '',
           '## Servicios (español)', ''] + [svc_line(s, 'es') for s in SVC] + ['', '## Services (English)', ''] + [svc_line(s, 'en') for s in SVC] + \
          ['', '## Услуги (русский)', ''] + [svc_line(s, 'ru') for s in SVC] + ['', '## Journal', ''] + \
          [f"- [{L(a['t'], 'es')}]({abs_url(art_url(a['id'], 'es'))}) · [EN]({abs_url(art_url(a['id'], 'en'))}) · [RU]({abs_url(art_url(a['id'], 'ru'))})" for a in ALL_ARTS] + \

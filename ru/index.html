@@ -68,6 +68,20 @@ section[id],footer[id]{scroll-margin-top:56px}
 .on-paper .btn:hover{background:#2a2927;color:#fff}
 .on-paper .btn-o{background:transparent;color:#000}
 .on-paper .btn-o:hover{background:#000;color:var(--paper)}
+.promo{background:var(--paper);color:var(--ink);padding-block:clamp(34px,4.4vw,60px)}
+.promo-in{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;row-gap:16px;align-items:end}
+.promo .k{grid-column:1 / -1;margin:0;color:var(--pmute)}
+.promo h2{grid-column:1 / span 7;margin:0;font-size:clamp(40px,5.6vw,88px);line-height:.94;letter-spacing:-.01em;text-wrap:balance}
+.promo-r{grid-column:8 / -1;display:flex;flex-direction:column;gap:14px}
+.promo-p{margin:0;font-size:16px;line-height:1.5;color:#2a2927}
+.promo-l{list-style:none;margin:0;padding:0;border-top:1px solid var(--pline)}
+.promo-l li{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:10px 0;border-bottom:1px solid var(--pline)}
+.promo-l b{font-weight:700;white-space:nowrap}
+.promo-l s{color:var(--pmute);margin-left:8px;white-space:nowrap}
+.promo-l .pr{text-align:right;flex:none}
+.promo-a{display:flex;flex-wrap:wrap;align-items:center;gap:14px 22px;margin-top:2px}
+.promo-a .lnk{color:var(--ink)}
+@media (max-width:900px){.promo h2,.promo-r{grid-column:1 / -1}}
 .langs{display:flex;gap:2px}
 .langs button{background:none;border:0;padding:6px 6px;cursor:pointer;color:var(--mute);font:500 11px/1 var(--s);letter-spacing:.06em}
 .langs button[aria-pressed="true"]{color:var(--fg)}
@@ -581,6 +595,25 @@ section[id],footer[id]{scroll-margin-top:56px}
   </a>
 </section>
 
+<!-- ================= PROMO (uñas, hasta 15.12.2026; se oculta sola después) ================= -->
+<section id="promo" class="promo on-paper g" data-until="2026-12-16T00:00:00-03:00" aria-labelledby="promoH">
+  <div class="w promo-in">
+    <p class="cap k" data-t="pr_k">Акция на ногти · до 15 декабря</p>
+    <h2 class="d" id="promoH" data-t="pr_h">Скидка 15% на первый визит на ногти</h2>
+    <div class="promo-r">
+      <p class="promo-p" data-t="pr_p">И ещё 15% вернём баллами на следующий визит. Действует на маникюр, педикюр и маникюр с педикюром в 4 руки.</p>
+      <ul class="promo-l cap">
+        <li><span data-t="pr_l1">Русский маникюр с укреплением</span><span class="pr"><b data-t="pr_n1">54 825 ARS</b><s data-t="pr_o1">64 500 ARS</s></span></li>
+        <li><span data-t="pr_l2">Маникюр и педикюр в 4 руки, около 2,5 часа</span><span class="pr"><b data-t="pr_n2">120 700 ARS</b><s data-t="pr_o2">142 000 ARS</s></span></li>
+      </ul>
+      <div class="promo-a">
+        <a class="btn js-wa" data-wa="promo" href="https://wa.me/5491137626937?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%B7%D0%B0%D0%BF%D0%B8%D1%81%D0%B0%D1%82%D1%8C%D1%81%D1%8F%20%D0%BD%D0%B0%20%D0%BD%D0%BE%D0%B3%D1%82%D0%B8%20%D1%81%D0%BE%20%D1%81%D0%BA%D0%B8%D0%B4%D0%BA%D0%BE%D0%B9%2015%25%20%D0%BD%D0%B0%20%D0%BF%D0%B5%D1%80%D0%B2%D1%8B%D0%B9%20%D0%B2%D0%B8%D0%B7%D0%B8%D1%82" target="_blank" rel="noopener" data-t="pr_btn">Написать в WhatsApp</a>
+        <a class="cap lnk" id="promoMore" href="/ru/uslugi/manikyur/" data-t="pr_more">Подробнее о маникюре</a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ================= ABOUT ================= -->
 <section id="about" class="sec g">
   <div class="w">
@@ -956,7 +989,7 @@ section[id],footer[id]{scroll-margin-top:56px}
 <section id="prices" class="sec g bt">
   <div class="w">
     <div class="pr-h">
-      <h2 class="d big" data-t="pr_h">Цены</h2>
+      <h2 class="d big" data-t="pr_h">Скидка 15% на первый визит на ногти</h2>
       <p class="cap mu2" style="margin:0;max-width:320px" data-t="pr_note">Ориентировочные цены в аргентинских песо. Итоговая стоимость зависит от длины и густоты волос.</p>
     </div>
     <div class="prices" id="price-cards">
@@ -1158,6 +1191,18 @@ const U = {
   wa_prod:['Hola KULTURA, ¿tienen disponible ','Здравствуйте! Есть ли в наличии ','Hi KULTURA, do you have '],
   wa_prod2:['?','?','in stock?'],
   wa_rent:['Hola KULTURA, me interesa alquilar un puesto o gabinete','Здравствуйте! Интересует аренда рабочего места или кабинета','Hi KULTURA, I’m interested in renting a workstation or room'],
+  wa_promo:['Hola KULTURA, quiero reservar con el 15% OFF en mi primera visita de uñas','Здравствуйте! Хочу записаться на ногти со скидкой 15% на первый визит','Hi KULTURA, I’d like to book with 15% off my first nail visit'],
+  pr_k:['Promo uñas · hasta el 15 de diciembre','Акция на ногти · до 15 декабря','Nail offer · until 15 December'],
+  pr_h:['15% OFF en tu primera visita de uñas','Скидка 15% на первый визит на ногти','15% off your first nail visit'],
+  pr_p:['Y te devolvemos otro 15% en puntos para la próxima. Vale para manicura, pedicura y manicura y pedicura a cuatro manos.','И ещё 15% вернём баллами на следующий визит. Действует на маникюр, педикюр и маникюр с педикюром в 4 руки.','Plus another 15% back in points for your next visit. Valid for manicure, pedicure and the four-hand manicure and pedicure.'],
+  pr_l1:['Manicura rusa con refuerzo','Русский маникюр с укреплением','Russian manicure with strengthening'],
+  pr_n1:['$54.825','54 825 ARS','ARS 54,825'],
+  pr_o1:['$64.500','64 500 ARS','ARS 64,500'],
+  pr_l2:['Manicura y pedicura a 4 manos, unas 2,5 horas','Маникюр и педикюр в 4 руки, около 2,5 часа','Four-hand manicure and pedicure, about 2.5 hours'],
+  pr_n2:['$120.700','120 700 ARS','ARS 120,700'],
+  pr_o2:['$142.000','142 000 ARS','ARS 142,000'],
+  pr_btn:['Escribir por WhatsApp','Написать в WhatsApp','Message us on WhatsApp'],
+  pr_more:['Ver manicura rusa','Подробнее о маникюре','See Russian manicure'],
   alt_roman:['Roman, cofundador de KULTURA','Роман, сооснователь KULTURA','Roman, co-founder of KULTURA'],
   alt_rent:['Puesto de trabajo junto a la ventana','Рабочее место у окна','Workstation by the window'],
   alt_logo:['Logo de KULTURA Beauty Studio en el estudio','Логотип KULTURA Beauty Studio в студии','KULTURA Beauty Studio logo in the studio']
@@ -2030,7 +2075,8 @@ function applyStatic(){
   $$('[data-t]').forEach(el => { const v = t(el.dataset.t); if (v) el.textContent = v; });
   $$('[data-ta]').forEach(el => { const v = t(el.dataset.ta); if (!v) return; if (el.tagName === 'IMG') el.alt = v; else el.setAttribute('aria-label', v); });
   $$('[data-lang]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
-  $$('.js-wa').forEach(a => { a.href = waLink(a.dataset.wa === 'rent' ? t('wa_rent') : t('wa_hi')); });
+  $$('.js-wa').forEach(a => { a.href = waLink(a.dataset.wa === 'rent' ? t('wa_rent') : a.dataset.wa === 'promo' ? t('wa_promo') : t('wa_hi')); });
+  $$('[data-until]').forEach(el => { if (Date.now() > Date.parse(el.dataset.until)) el.remove(); });
   $('#ringTxt').textContent = t('ring');
   $('#badgeTxt').textContent = t('badge');
   $('#ovalTxt').textContent = t('oval').repeat(lang === 'en' ? 8 : 7);

@@ -45,6 +45,20 @@ section[id],footer[id]{scroll-margin-top:56px}
 .on-paper .btn:hover{background:#2a2927;color:#fff}
 .on-paper .btn-o{background:transparent;color:#000}
 .on-paper .btn-o:hover{background:#000;color:var(--paper)}
+.promo{background:var(--paper);color:var(--ink);padding-block:clamp(34px,4.4vw,60px)}
+.promo-in{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;row-gap:16px;align-items:end}
+.promo .k{grid-column:1 / -1;margin:0;color:var(--pmute)}
+.promo h2{grid-column:1 / span 7;margin:0;font-size:clamp(40px,5.6vw,88px);line-height:.94;letter-spacing:-.01em;text-wrap:balance}
+.promo-r{grid-column:8 / -1;display:flex;flex-direction:column;gap:14px}
+.promo-p{margin:0;font-size:16px;line-height:1.5;color:#2a2927}
+.promo-l{list-style:none;margin:0;padding:0;border-top:1px solid var(--pline)}
+.promo-l li{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:10px 0;border-bottom:1px solid var(--pline)}
+.promo-l b{font-weight:700;white-space:nowrap}
+.promo-l s{color:var(--pmute);margin-left:8px;white-space:nowrap}
+.promo-l .pr{text-align:right;flex:none}
+.promo-a{display:flex;flex-wrap:wrap;align-items:center;gap:14px 22px;margin-top:2px}
+.promo-a .lnk{color:var(--ink)}
+@media (max-width:900px){.promo h2,.promo-r{grid-column:1 / -1}}
 .langs{display:flex;gap:2px}
 .langs button{background:none;border:0;padding:6px 6px;cursor:pointer;color:var(--mute);font:500 11px/1 var(--s);letter-spacing:.06em}
 .langs button[aria-pressed="true"]{color:var(--fg)}
