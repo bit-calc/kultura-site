@@ -12,6 +12,10 @@ SERVICES = {
            'en':'AirTouch, balayage or highlights in Microcentro, Buenos Aires, with Roman, KULTURA’s head colourist. From ARS 180,000, sessions up to 6 hours. Book online.'},
   'h1': {'es':'AirTouch en Buenos Aires','ru':'AirTouch в Буэнос-Айресе','en':'AirTouch in Buenos Aires'},
   'faq': [
+   ({'es':'¿Dónde hacer AirTouch en Buenos Aires?','ru':'Где сделать AirTouch в Буэнос-Айресе?','en':'Where can I get AirTouch in Buenos Aires?'},
+    {'es':'En KULTURA Beauty Studio, en Microcentro: Tte. Gral. Juan D. Perón 683. Lo hace Roman, cofundador y colorista principal del estudio. Atendemos de lunes a sábado de 10 a 20, con cita previa, en español y en ruso.',
+     'ru':'В студии KULTURA в Микроцентро: Tte. Gral. Juan D. Perón 683. AirTouch делает Роман, сооснователь и главный колорист студии. Работаем с понедельника по субботу с 10 до 20, по записи; говорим по-русски и по-испански.',
+     'en':'At KULTURA Beauty Studio in Microcentro: Tte. Gral. Juan D. Perón 683. It’s done by Roman, the studio’s co-founder and head colourist. We’re open Monday to Saturday, 10 to 20, by appointment, and speak Spanish and Russian.'}),
    ({'es':'¿Qué es AirTouch?','ru':'Что такое AirTouch?','en':'What is AirTouch?'},
     {'es':'Es una técnica de aclarado en la que el cabello se separa con el aire del secador: las mechas más cortas y finas vuelan y se aclaran solo las más fuertes. Así el rubio queda difuminado, con transiciones suaves y sin una línea de crecimiento marcada.',
      'ru':'Это техника осветления, при которой волосы разделяют потоком воздуха от фена: короткие и тонкие волоски отлетают, а осветляются только самые сильные пряди. Блонд получается растушёванным, с мягкими переходами и без резкой границы отрастания.',

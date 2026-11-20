@@ -19,7 +19,7 @@ from articles_batch2 import ARTICLES_B2                   # noqa: E402
 DOMAIN = 'https://kulturaba.com'
 TODAY = '2026-11-14'
 # pages whose content changed later (key: Spanish URL of the page group) -> date for sitemap <lastmod>
-LASTMOD = {'/': '2026-11-18', '/servicios/manicura-rusa/': '2026-11-18', '/servicios/pedicura-rusa/': '2026-11-18', '/servicios/manicura-pedicura-cuatro-manos/': '2026-11-18',
+LASTMOD = {'/': '2026-11-18', '/servicios/airtouch/': '2026-11-20', '/servicios/manicura-rusa/': '2026-11-18', '/servicios/pedicura-rusa/': '2026-11-18', '/servicios/manicura-pedicura-cuatro-manos/': '2026-11-18',
            '/blog/': '2026-11-18', '/blog/manicura-rusa-precio-buenos-aires/': '2026-11-18', '/blog/manicura-rusa-o-semipermanente-diferencias/': '2026-11-18',
            '/blog/manicura-en-microcentro/': '2026-11-18', '/blog/como-retirar-semipermanente-sin-danar-la-una/': '2026-11-18',
            '/blog/diseno-de-unas-minimalismo-o-atrevido/': '2026-11-18',
@@ -349,6 +349,14 @@ def price_rows(rows, lang, range_=True):
         out.append(f'<div class="row"><span>{e(L(n, lang))}{f"<small>{e(sub)}</small>" if sub else ""}</span><span class="p">{e(price)}</span></div>')
     return ''.join(out)
 
+ROMAN_ID = DOMAIN + '/#roman'
+ROMAN_ROLE = {'es': 'Cofundador y colorista principal', 'ru': 'Сооснователь и главный колорист', 'en': 'Co-founder and head colourist'}
+
+def roman_node(lang):
+    return {'@type': 'Person', '@id': ROMAN_ID, 'name': 'Roman', 'jobTitle': ROMAN_ROLE[lang], 'worksFor': {'@id': SALON_ID},
+            'knowsAbout': [L(s['name'], lang) for s in SVC if s['who'] == 'roman'], 'knowsLanguage': ['es', 'ru'],
+            'image': DOMAIN + '/img3/r-portrait.jpg', 'sameAs': ['https://www.instagram.com/roma_pokrasit/']}
+
 def who_line(w, lang):
     return (t('whos', lang) if w in ('nails', 'browslash') else t('who', lang)) + ' ' + L(WHO[w], lang)
 
@@ -416,6 +424,9 @@ def build_services():
             if prices and not s.get('consult'):
                 svc_node['offers'] = {'@type': 'AggregateOffer', 'priceCurrency': 'ARS', 'lowPrice': min(p for p in prices), 'highPrice': max(prices), 'url': BOOK}
             nodes = [salon_node(lang, full=False), svc_node, faq_node(faqs)]
+            if s['who'] == 'roman':
+                svc_node['provider'] = [{'@id': SALON_ID}, {'@id': ROMAN_ID}]
+                nodes.append(roman_node(lang))
             crumbs = [(x('home', lang), home_url(lang)), (t('n_services', lang), hub('svc', lang)), (nm, alts[lang])]
             write(alts[lang], page(lang, alts[lang], alts, seo['title'][lang], seo['desc'][lang], body, nodes, img_abs(s['img']), 'website', crumbs))
 
@@ -633,7 +644,11 @@ def build_misc():
           f'- Telegram: {TG}',
           '- Team: Roman (co-founder, head colourist), Valeria and Tatiana (manicure and pedicure), Sofía (lash extensions, 4 years’ experience, trains beginners), Nikolai (brow architecture, brow and lash lamination)',
           '- Prices in Argentine pesos from the studio booking system, November 2026',
-          '- Nail offer until 15 December 2026: 15% off the first nail visit (manicure, pedicure, four-hand manicure and pedicure) plus another 15% back in points for the next visit. Booking by WhatsApp.', '',
+          '- Nail offer until 15 December 2026: 15% off the first nail visit (manicure, pedicure, four-hand manicure and pedicure) plus another 15% back in points for the next visit. Booking by WhatsApp.',
+          '', '## AirTouch in Buenos Aires', '',
+          '- Where to get AirTouch in Buenos Aires: KULTURA Beauty Studio, Tte. Gral. Juan D. Perón 683, Microcentro. Done by Roman, co-founder and head colourist. AirTouch, balayage or highlights from ARS 180,000 to ARS 455,000 depending on length and density; a session takes up to six hours; a test strand costs ARS 20,000. Spanish and Russian spoken. Details: https://kulturaba.com/en/services/airtouch/',
+          '- Dónde hacer AirTouch en Buenos Aires: KULTURA Beauty Studio, Tte. Gral. Juan D. Perón 683, Microcentro. Lo hace Roman, cofundador y colorista principal. Desde $180.000; sesión de hasta seis horas. Detalles: https://kulturaba.com/servicios/airtouch/',
+          '- Где сделать AirTouch в Буэнос-Айресе: студия KULTURA, Tte. Gral. Juan D. Perón 683, Микроцентро. Делает Роман, сооснователь и главный колорист. От 180 000 ARS; сеанс до шести часов. Подробнее: https://kulturaba.com/ru/uslugi/airtouch/', '',
           '## Servicios (español)', ''] + [svc_line(s, 'es') for s in SVC] + ['', '## Services (English)', ''] + [svc_line(s, 'en') for s in SVC] + \
          ['', '## Услуги (русский)', ''] + [svc_line(s, 'ru') for s in SVC] + ['', '## Journal', ''] + \
          [f"- [{L(a['t'], 'es')}]({abs_url(art_url(a['id'], 'es'))}) · [EN]({abs_url(art_url(a['id'], 'en'))}) · [RU]({abs_url(art_url(a['id'], 'ru'))})" for a in ALL_ARTS] + \
