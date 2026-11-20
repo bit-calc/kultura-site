@@ -15,6 +15,7 @@ sys.path.insert(0, os.path.join(HERE, 'content'))
 from services_seo import SERVICES, ARTICLE_SLUGS          # noqa: E402
 from articles_new import ARTICLES_NEW                     # noqa: E402
 from articles_batch2 import ARTICLES_B2                   # noqa: E402
+from articles_batch3 import ARTICLES_B3                   # noqa: E402
 
 DOMAIN = 'https://kulturaba.com'
 TODAY = '2026-11-14'
@@ -169,11 +170,12 @@ for a in ARTS:
     ALL_ARTS.append(dict(id=a['id'], slug=ARTICLE_SLUGS[a['id']], img=a['img'], pos=a.get('pos', '50% 50%'), min=a['min'],
                          svc=a.get('svc'), k=a['k'], t=a['t'], l=a['l'], by=a['by'], b=a['b'], date='2026-11-13',
                          title={g: L(a['t'], g) + ' | KULTURA' for g in LANGS}, desc={g: ART_DESC.get(a['id'], {}).get(g) or L(a['l'], g) for g in LANGS}, new=False))
-for a in ARTICLES_B2 + ARTICLES_NEW:   # newest batch first in the Journal
+for a in ARTICLES_B3 + ARTICLES_B2 + ARTICLES_NEW:   # newest batch first in the Journal
     d = dict(a); d['new'] = True
     if d['id'] == 'salon-ruso': d['svc'] = None
     ALL_ARTS.append(d)
 ART_BY_ID = {a['id']: a for a in ALL_ARTS}
+QA_GUIDES = [('airtouch-guia', 'Questions and answers: AirTouch and blonde in Buenos Aires')]   # (article id, llms.txt heading)
 def art_url(aid, lang): return f"{hub('blog', lang)}{ART_BY_ID[aid]['slug'][lang]}/"
 
 TY_EN = {'sh': 'shampoo', 'co': 'conditioner', 'tr': 'treatment', 'ma': 'mask', 'sp': 'spray', 'se': 'serum'}
@@ -653,6 +655,16 @@ def build_misc():
          ['', '## Услуги (русский)', ''] + [svc_line(s, 'ru') for s in SVC] + ['', '## Journal', ''] + \
          [f"- [{L(a['t'], 'es')}]({abs_url(art_url(a['id'], 'es'))}) · [EN]({abs_url(art_url(a['id'], 'en'))}) · [RU]({abs_url(art_url(a['id'], 'ru'))})" for a in ALL_ARTS] + \
          ['', '## Products', '', f'- [Productos Schwarzkopf Professional]({abs_url(hub("prod", "es"))}) · [EN]({abs_url(hub("prod", "en"))}) · [RU]({abs_url(hub("prod", "ru"))})', '']
+    # Q&A guides: their concrete answers are repeated in llms.txt in three languages
+    for gid, head in QA_GUIDES:
+        g = ART_BY_ID.get(gid)
+        if not g: continue
+        qa = [f'## {head}', '', f"- Full guide with general questions (what it is, differences, upkeep, how to choose): [ES]({abs_url(art_url(gid, 'es'))}) · [EN]({abs_url(art_url(gid, 'en'))}) · [RU]({abs_url(art_url(gid, 'ru'))})"]
+        for lg in ('es', 'en', 'ru'):
+            for k, v in g['b'][lg]:
+                if k == 'faq': qa += [f'- Q: {q} A: {an}' for q, an in v]
+        i = ll.index('## Servicios (español)')
+        ll[i:i] = qa + ['']
     write('/llms.txt', '\n'.join(ll))
     # 404
     nf = ''.join(f'<p lang="{g}"><b>{e(x("nf", g))}</b> · <a href="{home_url(g)}">{e(x("home", g))}</a> · <a href="{hub("svc", g)}">{e(t("n_services", g))}</a> · <a href="{hub("blog", g)}">Journal</a></p>' for g in LANGS)
