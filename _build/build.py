@@ -41,6 +41,15 @@ IG = 'https://www.instagram.com/kultura.ba/'
 FB = 'https://www.facebook.com/profile.php?id=61591149431358'
 TG = 'https://t.me/kulturaba'
 GSC_META = '<meta name="google-site-verification" content="7s5pBvu950L4dqgWdP1ySm9-_SQzntV4EEBasq_62UQ">'  # Search Console, KULTURA Google account
+# Google Ads tag (account 430-265-1211) + conversion «Clic en WhatsApp (sitio)» on clicks to WhatsApp links.
+GADS_ID = 'AW-18285417218'
+GADS_WA_LABEL = ''   # conversion label from Google Ads (send_to = GADS_ID/label); empty = tag only, no conversion event
+GTAG = (f'<script async src="https://www.googletagmanager.com/gtag/js?id={GADS_ID}"></script>'
+        '<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}'
+        f"gtag('js',new Date());gtag('config','{GADS_ID}');"
+        + (("document.addEventListener('click',function(e){var a=e.target&&e.target.closest&&e.target.closest('a[href*=\"wa.me/\"],a[href*=\"api.whatsapp.com\"],a[href^=\"whatsapp:\"]');"
+            f"if(a)gtag('event','conversion',{{send_to:'{GADS_ID}/{GADS_WA_LABEL}'}});}},true);") if GADS_WA_LABEL else '')
+        + '</script>')
 
 # ------------------------------------------------------------------ data from the app
 APP = open(os.path.join(HERE, 'app.html'), encoding='utf-8').read()
@@ -288,7 +297,7 @@ def page(lang, path, alts, title, desc, body, nodes, og_img=None, og_type='websi
     return f'''<!doctype html>
 <html lang="{lang}">
 <head>
-<meta charset="utf-8">
+<meta charset="utf-8">{GTAG}
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>{e(title)}</title>
 <meta name="description" content="{e(desc)}">
@@ -585,7 +594,7 @@ def build_homes():
         sub(r'<meta property="og:locale" content="[^"]*">(<meta property="og:locale:alternate" content="[^"]*">)*',
             f'<meta property="og:locale" content="{OG_LOCALE[lang]}">' + ''.join(f'<meta property="og:locale:alternate" content="{OG_LOCALE[g]}">' for g in LANGS if g != lang))
         sub(r'<script type="application/ld\+json">.*?</script>', ld([salon_node(lang, full=True), {'@type': 'WebSite', '@id': DOMAIN + '/#website', 'url': DOMAIN + '/', 'name': 'KULTURA Beauty Studio', 'inLanguage': ['es', 'ru', 'en']}]), re.S)
-        h = h.replace('<meta charset="utf-8">', '<meta charset="utf-8">' + GSC_META, 1)
+        h = h.replace('<meta charset="utf-8">', '<meta charset="utf-8">' + GSC_META + GTAG, 1)
         if lang == 'es':
             h = h.replace('<meta charset="utf-8">', '<meta charset="utf-8">' + REDIRECT, 1)
         # script patches
