@@ -50,4 +50,9 @@ User-agent: Googlebot
 Allow: /
 Disallow: /_build/
 
+User-agent: Yandex
+Allow: /
+Disallow: /_build/
+Clean-param: utm_source&utm_medium&utm_campaign&utm_content&utm_term&gclid&fbclid&yclid
+
 Sitemap: https://kulturaba.com/sitemap.xml

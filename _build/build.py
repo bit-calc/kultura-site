@@ -17,6 +17,7 @@ from articles_new import ARTICLES_NEW                     # noqa: E402
 from articles_batch2 import ARTICLES_B2                   # noqa: E402
 from articles_batch3 import ARTICLES_B3                   # noqa: E402
 from articles_batch4 import ARTICLES_B4                   # noqa: E402
+from articles_batch5 import ARTICLES_B5                   # noqa: E402
 
 DOMAIN = 'https://kulturaba.com'
 TODAY = '2026-11-14'
@@ -30,6 +31,9 @@ LASTMOD = {'/': '2026-11-25', '/blog/salon-ruso-buenos-aires/': '2026-11-25', '/
            '/blog/manicura-rusa-esmaltado-pegado-a-la-cuticula/': '2026-11-18',
            '/blog/manicura-y-pedicura-a-cuatro-manos/': '2026-11-18',
            '/blog/pedicura-rusa-smart-que-incluye/': '2026-11-18'}
+# 25.11: headings and titles tuned to real Search Console queries
+LASTMOD.update({k: '2026-11-25' for k in ('/blog/kapping-soft-gel-unas-esculpidas-diferencias/', '/blog/por-que-el-rubio-se-pone-amarillo/', '/blog/balayage-buenos-aires-precio/',
+                                           '/servicios/cortes/', '/servicios/peinados/', '/servicios/rubio-total/', '/servicios/pedicura-rusa/', '/servicios/')})
 LANGS = ['es', 'ru', 'en']
 PFX = {'es': '', 'ru': '/ru', 'en': '/en'}
 SEG = {'svc': {'es': 'servicios', 'ru': 'uslugi', 'en': 'services'},
@@ -181,7 +185,7 @@ for a in ARTS:
     ALL_ARTS.append(dict(id=a['id'], slug=ARTICLE_SLUGS[a['id']], img=a['img'], pos=a.get('pos', '50% 50%'), min=a['min'],
                          svc=a.get('svc'), k=a['k'], t=a['t'], l=a['l'], by=a['by'], b=a['b'], date='2026-11-13',
                          title={g: L(a['t'], g) + ' | KULTURA' for g in LANGS}, desc={g: ART_DESC.get(a['id'], {}).get(g) or L(a['l'], g) for g in LANGS}, new=False))
-for a in ARTICLES_B4 + ARTICLES_B3 + ARTICLES_B2 + ARTICLES_NEW:   # newest batch first in the Journal
+for a in ARTICLES_B5 + ARTICLES_B4 + ARTICLES_B3 + ARTICLES_B2 + ARTICLES_NEW:   # newest batch first in the Journal
     d = dict(a); d['new'] = True
     if d['id'] == 'salon-ruso': d['svc'] = None
     ALL_ARTS.append(d)
@@ -287,14 +291,66 @@ def footer(lang):
 <div class="legal g cap mu"><span>© 2026 KULTURA Beauty Studio</span><span>{e(t('legal', lang))}</span></div>
 </footer>'''
 
-FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oranienbaum&family=Playfair+Display:ital@1&family=Manrope:wght@400;500;600;700&display=swap">'
+FONT_CSS = 'https://fonts.googleapis.com/css2?family=Oranienbaum&family=Playfair+Display:ital@1&family=Manrope:wght@400;500;600;700&display=swap'
+# font stylesheet is loaded without blocking the first paint (text shows in the fallback font, then swaps)
+FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
+         f'<link rel="preload" as="style" href="{FONT_CSS}"><link rel="stylesheet" href="{FONT_CSS}" media="print" onload="this.media=\'all\'">'
+         f'<noscript><link rel="stylesheet" href="{FONT_CSS}"></noscript>')
+
+# ------------------------------------------------------------------ images: WebP copies, sizes, <picture>
+_IMG = {}
+def img_info(src):
+    """Width/height of a local image + WebP copies next to it (created once, then reused): full size, 800w, 240w."""
+    src = src.lstrip('/')
+    if src in _IMG: return _IMG[src]
+    fp = os.path.join(ROOT, src); info = None
+    if os.path.exists(fp) and src.lower().endswith(('.jpg', '.jpeg', '.png')):
+        from PIL import Image
+        im = Image.open(fp); w, h = im.size; base = src.rsplit('.', 1)[0]
+        info = {'w': w, 'h': h, 'full': base + '.webp', 'v': {}}
+        if not os.path.exists(os.path.join(ROOT, info['full'])):
+            im.convert('RGB').save(os.path.join(ROOT, info['full']), 'WEBP', quality=80, method=6)
+        for vw in (800, 240):
+            if w > vw * 1.15:
+                name = f'{base}-{vw}.webp'
+                if not os.path.exists(os.path.join(ROOT, name)):
+                    im.convert('RGB').resize((vw, round(h * vw / w)), Image.LANCZOS).save(os.path.join(ROOT, name), 'WEBP', quality=78, method=6)
+                info['v'][vw] = name
+    _IMG[src] = info
+    return info
+
+def img_srcset(src, thumb=False):
+    i = img_info(src)
+    if not i: return ''
+    parts = [f'/{i["v"][vw]} {vw}w' for vw in ((240, 800) if thumb else (800,)) if vw in i['v']]
+    return ', '.join(parts + [f'/{i["full"]} {i["w"]}w'])
+
+def img(src, alt, style='', hero=False, sizes='(max-width:860px) 100vw, 50vw', thumb=False, dims=True):
+    """<picture> with WebP sources and a JPEG fallback; hero images load first, the rest lazily."""
+    src = src.lstrip('/'); i = img_info(src)
+    st = f' style="{style}"' if style else ''
+    pr = ' fetchpriority="high"' if hero else ' loading="lazy"'
+    if not i: return f'<img src="/{src}" alt="{e(alt)}"{pr} decoding="async"{st}>'
+    wh = f' width="{i["w"]}" height="{i["h"]}"' if dims else ''
+    return (f'<picture style="display:contents"><source type="image/webp" srcset="{img_srcset(src, thumb)}" sizes="{sizes}">'
+            f'<img src="/{src}" alt="{e(alt)}"{wh}{pr} decoding="async"{st}></picture>')
+
+def preload_img(src, sizes):
+    if not src or not img_info(src): return ''
+    return f'<link rel="preload" as="image" type="image/webp" imagesrcset="{img_srcset(src)}" imagesizes="{sizes}" fetchpriority="high">'
+
+SZ_SVC = '(max-width:860px) 100vw, 42vw'
+SZ_ART = '(max-width:1100px) 100vw, 1100px'
+
 
 def alt_links(alts):
     s = ''.join(f'<link rel="alternate" hreflang="{g}" href="{abs_url(alts[g])}">' for g in LANGS)
     return s + f'<link rel="alternate" hreflang="x-default" href="{abs_url(alts["es"])}">'
 
-def page(lang, path, alts, title, desc, body, nodes, og_img=None, og_type='website', crumbs=None):
+def page(lang, path, alts, title, desc, body, nodes, og_img=None, og_type='website', crumbs=None, hero=None):
     ogi = og_img or (DOMAIN + '/og.jpg')
+    if len(title) > 60 and title.endswith(' | KULTURA'): title = title[:-len(' | KULTURA')]   # keep titles within ~60 characters
+    pre = preload_img(hero[0], hero[1]) if hero else ''
     crumb_html = ''
     if crumbs:
         crumb_html = '<nav class="sp-crumbs cap mu" aria-label="breadcrumb"><ol>' + ''.join(
@@ -315,7 +371,7 @@ def page(lang, path, alts, title, desc, body, nodes, og_img=None, og_type='websi
 <meta property="og:url" content="{abs_url(path)}"><meta property="og:image" content="{e(ogi)}"><meta property="og:locale" content="{OG_LOCALE[lang]}">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
-{FONTS}
+{pre}{FONTS}
 <link rel="stylesheet" href="/assets/site.css"><link rel="stylesheet" href="/assets/pages.css">
 {ld(nodes)}
 </head>
@@ -346,8 +402,8 @@ def blocks_html(blocks):
         if k == 'h': out.append(f'<h2 class="d">{e(v)}</h2>')
         elif k == 'q': out.append(f'<blockquote class="it">{e(v)}</blockquote>')
         elif k == 'ul': out.append('<ul>' + ''.join(f'<li><b>{e(b)}</b>{(" " + e(r)) if r else ""}</li>' for b, r in v) + '</ul>')
-        elif k == 'img': out.append(f'<figure class="rd-fig"><img src="/{v[0].lstrip("/")}" alt="{e(v[1])}" loading="lazy"><figcaption class="cap mu">{e(v[1])}</figcaption></figure>')
-        elif k == 'imgs': out.append('<div class="rd-pair">' + ''.join(f'<figure class="rd-fig"><div class="ph"><img src="/{s.lstrip("/")}" alt="{e(c)}" loading="lazy"></div><figcaption class="cap mu">{e(c)}</figcaption></figure>' for s, c in v) + '</div>')
+        elif k == 'img': out.append(f'<figure class="rd-fig">{img(v[0], v[1], sizes="(max-width:800px) 100vw, 760px", dims=False)}<figcaption class="cap mu">{e(v[1])}</figcaption></figure>')
+        elif k == 'imgs': out.append('<div class="rd-pair">' + ''.join(f'<figure class="rd-fig"><div class="ph">{img(s, c, sizes="(max-width:800px) 50vw, 380px")}</div><figcaption class="cap mu">{e(c)}</figcaption></figure>' for s, c in v) + '</div>')
         elif k == 'faq': faqs.extend(v)
         else: out.append(f'<p>{e(v)}</p>')
     return ''.join(out), faqs
@@ -422,7 +478,7 @@ def build_services():
             rel_html = ''.join(f'<a class="sp-rel" href="{art_url(a["id"], lang)}"><span class="cap mu">{e(x("read_more", lang))}</span><span class="d">{e(L(a["t"], lang))}</span></a>' for a in rel)
             others = ''.join(f'<li><a href="{svc_url(o["id"], lang)}">{e(L(o["name"], lang))}</a></li>' for o in SVC if o['id'] != sid)
             body = f'''<article class="sp-svc g w">
-<div class="sp-svc-ph"><div class="ph"><img src="/{s['img']}" alt="{e(nm)}" style="object-position:{s.get('pos', '50% 50%')}"></div></div>
+<div class="sp-svc-ph"><div class="ph">{img(s['img'], seo['h1'][lang] + ' · KULTURA Beauty Studio', f"object-position:{s.get('pos', '50% 50%')}", hero=True, sizes=SZ_SVC)}</div></div>
 <div class="sp-svc-t">
 <p class="cap mu">{e(t('g_hair', lang) if s['g'] == 'hair' else t('g_hands', lang))}</p>
 <h1 class="d">{e(seo['h1'][lang])}</h1>
@@ -446,7 +502,7 @@ def build_services():
                 svc_node['provider'] = [{'@id': SALON_ID}, {'@id': ROMAN_ID}]
                 nodes.append(roman_node(lang))
             crumbs = [(x('home', lang), home_url(lang)), (t('n_services', lang), hub('svc', lang)), (nm, alts[lang])]
-            write(alts[lang], page(lang, alts[lang], alts, seo['title'][lang], seo['desc'][lang], body, nodes, img_abs(s['img']), 'website', crumbs))
+            write(alts[lang], page(lang, alts[lang], alts, seo['title'][lang], seo['desc'][lang], body, nodes, img_abs(s['img']), 'website', crumbs, hero=(s['img'], SZ_SVC)))
 
 def build_svc_hub():
     alts = {g: hub('svc', g) for g in LANGS}
@@ -483,7 +539,7 @@ def build_articles():
             body = f'''<article class="sp-art g">
 <header class="rd-head"><span class="meta cap mu"><span>{e(L(a['k'], lang))}</span><span>{a['min']} {e(t('read', lang))}</span><span>{e(L(a['by'], lang))}</span></span>
 <h1 class="d">{e(L(a['t'], lang))}</h1><p class="lead it">{e(L(a['l'], lang))}</p></header>
-<div class="rd-img"><div class="ph"><img src="/{a['img']}" alt="{e(L(a['t'], lang))}" style="object-position:{a.get('pos', '50% 50%')}"></div></div>
+<div class="rd-img"><div class="ph">{img(a['img'], L(a['t'], lang), f"object-position:{a.get('pos', '50% 50%')}", hero=True, sizes=SZ_ART)}</div></div>
 <div class="rd-body">{bhtml}{faq_html(faqs, lang)}</div>
 {promo_card(svc, lang) if svc else ''}<div class="rd-cta"><p class="d">{e(t('rd_cta', lang))}</p><div style="display:flex;flex-wrap:wrap;gap:10px"><a class="btn" href="{BOOK}" target="_blank" rel="noopener">{e(t('sh_book', lang))}</a>{cta2}</div></div>
 <div class="rd-next"><a href="{art_url(nx['id'], lang)}"><span class="cap mu">{e(t('rd_next', lang))}</span><span class="d">{e(L(nx['t'], lang))}</span></a></div>
@@ -500,14 +556,14 @@ def build_articles():
                 art_node['about'] = {'@id': ROMAN_ID}
                 nodes += [roman_node(lang), {'@type': 'ProfilePage', 'url': abs_url(alts[lang]), 'inLanguage': lang, 'mainEntity': {'@id': ROMAN_ID}}]
             crumbs = [(x('home', lang), home_url(lang)), (t('n_journal', lang), hub('blog', lang)), (L(a['t'], lang), alts[lang])]
-            write(alts[lang], page(lang, alts[lang], alts, a['title'][lang], a['desc'][lang], body, nodes, img_abs(a['img']), 'article', crumbs))
+            write(alts[lang], page(lang, alts[lang], alts, a['title'][lang], a['desc'][lang], body, nodes, img_abs(a['img']), 'article', crumbs, hero=(a['img'], SZ_ART)))
 
 def build_blog_hub():
     alts = {g: hub('blog', g) for g in LANGS}
     SITEMAP.append(alts)
     order = [a for a in ALL_ARTS if a['new']] + [a for a in ALL_ARTS if not a['new']]
     for lang in LANGS:
-        items = ''.join(f'''<a class="jitem" href="{art_url(a['id'], lang)}"><div class="ph"><img src="/{a['img']}" alt="{e(L(a['t'], lang))}" loading="lazy" style="object-position:{a.get('pos', '50% 50%')}"></div>
+        items = ''.join(f'''<a class="jitem" href="{art_url(a['id'], lang)}"><div class="ph">{img(a['img'], L(a['t'], lang), f"object-position:{a.get('pos', '50% 50%')}", sizes='96px', thumb=True)}</div>
 <span><span class="meta cap mu"><span>{e(L(a['k'], lang))}</span><span>{a['min']} {e(t('read', lang))}</span></span><h2 class="d">{e(L(a['t'], lang))}</h2><span class="mu2" style="font-size:14px">{e(L(a['l'], lang))}</span></span></a>''' for a in order)
         body = f'<section class="sp-hub g w"><h1 class="d big">Journal</h1><p class="lead it">{e(x("blog_lead", lang))}</p><div class="jlist sp-jlist">{items}</div></section>'
         nodes = [salon_node(lang, full=False), {'@type': 'Blog', 'name': 'KULTURA Journal', 'url': abs_url(alts[lang]), 'inLanguage': lang,
@@ -527,7 +583,7 @@ def build_products():
         for lang in LANGS:
             nm = prod_name(p, lang)
             ph = (f'<div class="ph noimg"><span class="d">{e(p["n"])}</span><span class="cap">{e(line["name"])}</span></div>' if p.get('noimg')
-                  else f'<div class="ph"><img src="/{p["img"]}" alt="{e(p["n"] + " " + L(p["ty"], lang))}"></div>')
+                  else f'<div class="ph">{img(p["img"], line["name"] + " " + p["n"] + " · " + L(p["ty"], lang) + " " + p["vol"], hero=True, sizes=SZ_SVC)}</div>')
             lis = ''.join(f'<li>{e(b)}</li>' for b in L(p['b'], lang))
             sl = ''.join(f'<li><a href="{prod_url(q["id"], lang)}">{e(q["n"] + " · " + L(q["ty"], lang) + " " + q["vol"])}</a></li>' for q in same[:6])
             body = f'''<article class="sp-prod g w">
@@ -549,13 +605,13 @@ def build_products():
                                 'url': abs_url(alts[lang]), 'seller': {'@id': SALON_ID}}}
             if not p.get('noimg'): pnode['image'] = img_abs(p['img'])
             title = f"{line['name']} {p['n']} {L(p['ty'], lang)} {p['vol']} · {'Precio' if lang == 'es' else 'Цена' if lang == 'ru' else 'Price'} | KULTURA"
-            if len(title) > 62: title = f"{line['name']} {p['n']} {L(p['ty'], lang)} {p['vol']} | KULTURA"
+            if len(title) > 60: title = f"{line['name']} {p['n']} {L(p['ty'], lang)} {p['vol']} | KULTURA"
             desc = f"{L(p['s'], lang)} {fmt(p['price'], lang)}."
             tail = {'es': ' Schwarzkopf Professional en KULTURA, Microcentro, Buenos Aires.', 'ru': ' Schwarzkopf Professional в студии KULTURA, Буэнос-Айрес.', 'en': ' Schwarzkopf Professional at KULTURA, Microcentro, Buenos Aires.'}[lang]
             if len(desc) + len(tail) <= 160: desc += tail
             crumbs = [(x('home', lang), home_url(lang)), (t('n_shop', lang), hub('prod', lang)), (line['name'] + ' ' + p['n'], alts[lang])]
             write(alts[lang], page(lang, alts[lang], alts, title, desc[:160], body, [salon_node(lang, full=False), pnode],
-                                   None if p.get('noimg') else img_abs(p['img']), 'product', crumbs))
+                                   None if p.get('noimg') else img_abs(p['img']), 'product', crumbs, hero=None if p.get('noimg') else (p['img'], SZ_SVC)))
 
 def build_prod_hub():
     alts = {g: hub('prod', g) for g in LANGS}
@@ -639,13 +695,17 @@ def build_misc():
     for alts in SITEMAP:
         for g in LANGS:
             links = ''.join(f'<xhtml:link rel="alternate" hreflang="{h}" href="{abs_url(alts[h])}"/>' for h in LANGS) + f'<xhtml:link rel="alternate" hreflang="x-default" href="{abs_url(alts["es"])}"/>'
-            out.append(f'<url><loc>{abs_url(alts[g])}</loc><lastmod>{LASTMOD.get(alts['es'], TODAY)}</lastmod>{links}</url>')
+            es = alts['es']
+            cf, pr = (('weekly', '1.0') if es == '/' else ('weekly', '0.9') if es.startswith('/servicios/') else ('weekly', '0.8') if es == '/blog/'
+                      else ('monthly', '0.7') if es.startswith('/blog/') else ('monthly', '0.6') if es == '/productos/' else ('monthly', '0.4'))
+            out.append(f'<url><loc>{abs_url(alts[g])}</loc><lastmod>{LASTMOD.get(es, TODAY)}</lastmod><changefreq>{cf}</changefreq><priority>{pr}</priority>{links}</url>')
     out.append('</urlset>')
     write('/sitemap.xml', '\n'.join(out) + '\n')
     # robots
     bots = ['GPTBot', 'OAI-SearchBot', 'ChatGPT-User', 'PerplexityBot', 'Perplexity-User', 'ClaudeBot', 'Claude-SearchBot', 'Claude-User', 'Google-Extended', 'Applebot-Extended', 'Bingbot', 'Googlebot']
     rb = ['User-agent: *', 'Allow: /', 'Disallow: /_build/', '']
     for b in bots: rb += [f'User-agent: {b}', 'Allow: /', 'Disallow: /_build/', '']
+    rb += ['User-agent: Yandex', 'Allow: /', 'Disallow: /_build/', 'Clean-param: utm_source&utm_medium&utm_campaign&utm_content&utm_term&gclid&fbclid&yclid', '']
     rb.append(f'Sitemap: {DOMAIN}/sitemap.xml')
     write('/robots.txt', '\n'.join(rb) + '\n')
     # _headers (Cloudflare Pages)

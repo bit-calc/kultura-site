@@ -41,7 +41,7 @@ SERVICES = {
   'desc': {'es':'Rubio total y cambios de color en Microcentro, Buenos Aires, con Schwarzkopf Professional BLONDME. Desde $228.000; retoque desde $250.000. Reservá con Roman.',
            'ru':'Тотал блонд и смена цвета в Микроцентро, Буэнос-Айрес, на Schwarzkopf Professional BLONDME. От 228 000 ARS, коррекция — 250 000 ARS. Запись к Роману.',
            'en':'Total blonde and colour changes in Microcentro, Buenos Aires, with Schwarzkopf Professional BLONDME. From ARS 228,000; touch-up ARS 250,000. Book with Roman.'},
-  'h1': {'es':'Rubio total','ru':'Тотал блонд','en':'Total blonde'},
+  'h1': {'es':'Rubio total en Buenos Aires','ru':'Тотал блонд в Буэнос-Айресе','en':'Total blonde in Buenos Aires'},
   'faq': [
    ({'es':'¿Cuánto cuesta el rubio total?','ru':'Сколько стоит тотал блонд?','en':'How much is a total blonde?'},
     {'es':'Desde $228.000 hasta $568.000, según el largo, la densidad y el punto de partida del cabello. El retoque de rubio total cuesta $250.000.',
@@ -156,7 +156,7 @@ SERVICES = {
   'desc': {'es':'Cortes de mujer y hombre, capas y flequillo en Microcentro, Buenos Aires. Corte de mujer $73.000, hombre $48.000, corte y tratamiento $114.000.',
            'ru':'Женские и мужские стрижки, слои и чёлка в Микроцентро, Буэнос-Айрес. Женская стрижка — 73 000 ARS, мужская — 48 000 ARS, стрижка с уходом — 114 000 ARS.',
            'en':'Women’s and men’s cuts, layers and fringes in Microcentro, Buenos Aires. Women’s cut ARS 73,000, men’s ARS 48,000, cut and treatment ARS 114,000.'},
-  'h1': {'es':'Cortes de pelo','ru':'Стрижки','en':'Haircuts'},
+  'h1': {'es':'Corte de pelo en Microcentro','ru':'Стрижки в Буэнос-Айресе','en':'Haircuts in Buenos Aires'},
   'faq': [
    ({'es':'¿Cuánto cuesta un corte?','ru':'Сколько стоит стрижка?','en':'How much is a haircut?'},
     {'es':'Corte de mujer $73.000, corte de hombre $48.000, corte de flequillo $24.500 (sin lavado) y corte con tratamiento $114.000.',
@@ -202,7 +202,7 @@ SERVICES = {
   'desc': {'es':'Lavado y peinado con herramientas de calor en Microcentro, Buenos Aires, para un evento o para vos. $97.000 con lavado. Reservá online.',
            'ru':'Мытьё и укладка на горячий инструмент в Микроцентро, Буэнос-Айрес — на событие или просто для себя. 97 000 ARS с мытьём головы.',
            'en':'Wash and heat styling in Microcentro, Buenos Aires, for an event or just for you. ARS 97,000 with wash. Book online.'},
-  'h1': {'es':'Peinado','ru':'Укладка','en':'Styling'},
+  'h1': {'es':'Peinado y brushing en Microcentro','ru':'Укладка в Буэнос-Айресе','en':'Blow-dry and hair styling in Microcentro'},
   'faq': [
    ({'es':'¿Cuánto cuesta un peinado?','ru':'Сколько стоит укладка?','en':'How much is styling?'},
     {'es':'El peinado con herramientas de calor y lavado cuesta $97.000 y dura hasta una hora y media.',
@@ -246,7 +246,7 @@ SERVICES = {
   'desc': {'es':'Pedicura rusa SMART en Microcentro, Buenos Aires, con o sin tratamiento de plantas y esmaltado semipermanente. Desde $55.000; completa $77.500.',
            'ru':'Русский SMART-педикюр в Микроцентро, Буэнос-Айрес, с обработкой стоп или без, с гель-лаком или без. От 55 000 ARS; полный — 77 500 ARS.',
            'en':'Russian SMART pedicure in Microcentro, Buenos Aires, with or without foot care and gel polish. From ARS 55,000; full pedicure ARS 77,500.'},
-  'h1': {'es':'Pedicura rusa SMART','ru':'SMART-педикюр','en':'Russian SMART pedicure'},
+  'h1': {'es':'Pedicura rusa SMART en Buenos Aires','ru':'SMART-педикюр в Буэнос-Айресе','en':'Russian SMART pedicure in Buenos Aires'},
   'faq': [
    ({'es':'¿Qué incluye la pedicura rusa SMART?','ru':'Что входит в SMART-педикюр?','en':'What does the SMART pedicure include?'},
     {'es':'La versión completa incluye el trabajo de dedos y uñas, el tratamiento de plantas con discos SMART y el esmaltado semipermanente. También se puede hacer sin plantas o sin esmaltado.',

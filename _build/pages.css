@@ -112,3 +112,16 @@ body.sp{padding-top:calc(58px + env(safe-area-inset-top,0px))}
 .sp-promo .pl .pr{flex:none;text-align:right}
 .sp-promo .acts{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
 .sp-art .sp-promo{width:min(680px,100%);margin:44px auto 0}
+
+/* phones: taller touch areas for small links, slightly larger small caps (Lighthouse: tap targets, legible font sizes) */
+@media (max-width:860px){
+.sp .cap{font-size:12px}
+.sp-langs a{display:inline-flex;align-items:center;justify-content:center;min-width:38px;min-height:44px;padding:0 4px}
+.sp-bar .mark{min-height:44px}
+.sp-crumbs a{display:inline-block;padding:13px 0;margin:-13px 0}
+.sp-others ul{gap:0 18px}
+.sp-others a{display:inline-block;padding:12px 0}
+.sp-index ul{gap:0;margin-top:0}
+.sp-index ul a,.sp-index .sp-ih{display:inline-block;padding:11px 0}
+.sp-foot .vfoot a{display:block;padding:9px 0}
+}
