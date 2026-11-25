@@ -16,12 +16,13 @@ from services_seo import SERVICES, ARTICLE_SLUGS          # noqa: E402
 from articles_new import ARTICLES_NEW                     # noqa: E402
 from articles_batch2 import ARTICLES_B2                   # noqa: E402
 from articles_batch3 import ARTICLES_B3                   # noqa: E402
+from articles_batch4 import ARTICLES_B4                   # noqa: E402
 
 DOMAIN = 'https://kulturaba.com'
 TODAY = '2026-11-14'
 # pages whose content changed later (key: Spanish URL of the page group) -> date for sitemap <lastmod>
-LASTMOD = {'/': '2026-11-18', '/servicios/airtouch/': '2026-11-20', '/servicios/manicura-rusa/': '2026-11-18', '/servicios/pedicura-rusa/': '2026-11-18', '/servicios/manicura-pedicura-cuatro-manos/': '2026-11-18',
-           '/blog/': '2026-11-18', '/blog/manicura-rusa-precio-buenos-aires/': '2026-11-18', '/blog/manicura-rusa-o-semipermanente-diferencias/': '2026-11-18',
+LASTMOD = {'/': '2026-11-25', '/blog/salon-ruso-buenos-aires/': '2026-11-25', '/servicios/airtouch/': '2026-11-20', '/servicios/manicura-rusa/': '2026-11-18', '/servicios/pedicura-rusa/': '2026-11-18', '/servicios/manicura-pedicura-cuatro-manos/': '2026-11-18',
+           '/blog/': '2026-11-25', '/blog/manicura-rusa-precio-buenos-aires/': '2026-11-18', '/blog/manicura-rusa-o-semipermanente-diferencias/': '2026-11-18',
            '/blog/manicura-en-microcentro/': '2026-11-18', '/blog/como-retirar-semipermanente-sin-danar-la-una/': '2026-11-18',
            '/blog/diseno-de-unas-minimalismo-o-atrevido/': '2026-11-18',
            '/blog/kapping-soft-gel-unas-esculpidas-diferencias/': '2026-11-18',
@@ -133,6 +134,7 @@ X = {
                'Журнал KULTURA: техники окрашивания, русский маникюр, SMART-педикюр, ресницы и брови, уход за волосами и ответы на частые вопросы клиентов студии.',
                'KULTURA Journal: colour techniques, Russian manicure, SMART pedicure, lashes and brows, hair care and answers to what we’re asked most in the studio.'],
  'nf': ['Página no encontrada', 'Страница не найдена', 'Page not found'],
+ 'roman_page': ['Técnicas y precios', 'Техники и цены', 'Techniques and prices'],
 }
 def x(k, lang): return X[k][LANGS.index(lang)]
 
@@ -179,12 +181,16 @@ for a in ARTS:
     ALL_ARTS.append(dict(id=a['id'], slug=ARTICLE_SLUGS[a['id']], img=a['img'], pos=a.get('pos', '50% 50%'), min=a['min'],
                          svc=a.get('svc'), k=a['k'], t=a['t'], l=a['l'], by=a['by'], b=a['b'], date='2026-11-13',
                          title={g: L(a['t'], g) + ' | KULTURA' for g in LANGS}, desc={g: ART_DESC.get(a['id'], {}).get(g) or L(a['l'], g) for g in LANGS}, new=False))
-for a in ARTICLES_B3 + ARTICLES_B2 + ARTICLES_NEW:   # newest batch first in the Journal
+for a in ARTICLES_B4 + ARTICLES_B3 + ARTICLES_B2 + ARTICLES_NEW:   # newest batch first in the Journal
     d = dict(a); d['new'] = True
     if d['id'] == 'salon-ruso': d['svc'] = None
     ALL_ARTS.append(d)
 ART_BY_ID = {a['id']: a for a in ALL_ARTS}
-QA_GUIDES = [('airtouch-guia', 'Questions and answers: AirTouch and blonde in Buenos Aires')]   # (article id, llms.txt heading)
+# (article id, llms.txt heading, what the full page adds)
+QA_GUIDES = [('airtouch-guia', 'Questions and answers: AirTouch and blonde in Buenos Aires', 'Full guide with general questions (what it is, differences, upkeep, how to choose)'),
+             ('manicura-guia', 'Questions and answers: Russian manicure in Buenos Aires', 'Full guide with general questions (what it is, differences, whether it hurts, upkeep, how to choose)'),
+             ('salon-ruso', 'Questions and answers: Russian beauty salon in Buenos Aires', 'Full page about the studio and the Russian school of beauty'),
+             ('roman', 'Questions and answers: Roman, co-founder and head colourist', 'Full profile with techniques and prices')]
 def art_url(aid, lang): return f"{hub('blog', lang)}{ART_BY_ID[aid]['slug'][lang]}/"
 
 TY_EN = {'sh': 'shampoo', 'co': 'conditioner', 'tr': 'treatment', 'ma': 'mask', 'sp': 'spray', 'se': 'serum'}
@@ -366,7 +372,8 @@ ROMAN_ROLE = {'es': 'Cofundador y colorista principal', 'ru': 'Сооснова�
 def roman_node(lang):
     return {'@type': 'Person', '@id': ROMAN_ID, 'name': 'Roman', 'jobTitle': ROMAN_ROLE[lang], 'worksFor': {'@id': SALON_ID},
             'knowsAbout': [L(s['name'], lang) for s in SVC if s['who'] == 'roman'], 'knowsLanguage': ['es', 'ru'],
-            'image': DOMAIN + '/img3/r-portrait.jpg', 'sameAs': ['https://www.instagram.com/roma_pokrasit/']}
+            'image': DOMAIN + '/img3/r-portrait.jpg', 'sameAs': ['https://www.instagram.com/roma_pokrasit/'],
+            **({'url': abs_url(art_url('roman', lang))} if 'roman' in ART_BY_ID else {})}
 
 def who_line(w, lang):
     return (t('whos', lang) if w in ('nails', 'browslash') else t('who', lang)) + ' ' + L(WHO[w], lang)
@@ -465,6 +472,7 @@ def build_articles():
     for i, a in enumerate(ALL_ARTS):
         alts = {g: art_url(a['id'], g) for g in LANGS}
         SITEMAP.append(alts)
+        if a.get('new'): LASTMOD[alts['es']] = max(a['date'], LASTMOD.get(alts['es'], TODAY))   # sitemap <lastmod> never older than the article
         nx = ALL_ARTS[(i + 1) % len(ALL_ARTS)]
         for lang in LANGS:
             blocks = L(a['b'], lang)
@@ -488,6 +496,9 @@ def build_articles():
                         'publisher': {'@type': 'Organization', 'name': 'KULTURA Beauty Studio', 'logo': {'@type': 'ImageObject', 'url': DOMAIN + '/apple-touch-icon.png'}}}
             if svc: art_node['about'] = {'@type': 'Service', 'name': L(svc['name'], lang), 'url': abs_url(svc_url(svc['id'], lang))}
             nodes = [salon_node(lang, full=False), art_node] + ([faq_node(faqs)] if faqs else [])
+            if a['id'] == 'roman':   # profile page of a person
+                art_node['about'] = {'@id': ROMAN_ID}
+                nodes += [roman_node(lang), {'@type': 'ProfilePage', 'url': abs_url(alts[lang]), 'inLanguage': lang, 'mainEntity': {'@id': ROMAN_ID}}]
             crumbs = [(x('home', lang), home_url(lang)), (t('n_journal', lang), hub('blog', lang)), (L(a['t'], lang), alts[lang])]
             write(alts[lang], page(lang, alts[lang], alts, a['title'][lang], a['desc'][lang], body, nodes, img_abs(a['img']), 'article', crumbs))
 
@@ -496,7 +507,7 @@ def build_blog_hub():
     SITEMAP.append(alts)
     order = [a for a in ALL_ARTS if a['new']] + [a for a in ALL_ARTS if not a['new']]
     for lang in LANGS:
-        items = ''.join(f'''<a class="jitem" href="{art_url(a['id'], lang)}"><div class="ph"><img src="/{a['img']}" alt="" loading="lazy" style="object-position:{a.get('pos', '50% 50%')}"></div>
+        items = ''.join(f'''<a class="jitem" href="{art_url(a['id'], lang)}"><div class="ph"><img src="/{a['img']}" alt="{e(L(a['t'], lang))}" loading="lazy" style="object-position:{a.get('pos', '50% 50%')}"></div>
 <span><span class="meta cap mu"><span>{e(L(a['k'], lang))}</span><span>{a['min']} {e(t('read', lang))}</span></span><h2 class="d">{e(L(a['t'], lang))}</h2><span class="mu2" style="font-size:14px">{e(L(a['l'], lang))}</span></span></a>''' for a in order)
         body = f'<section class="sp-hub g w"><h1 class="d big">Journal</h1><p class="lead it">{e(x("blog_lead", lang))}</p><div class="jlist sp-jlist">{items}</div></section>'
         nodes = [salon_node(lang, full=False), {'@type': 'Blog', 'name': 'KULTURA Journal', 'url': abs_url(alts[lang]), 'inLanguage': lang,
@@ -609,6 +620,9 @@ def build_homes():
         h = h.replace('<div class="pgrid" id="shop-grid"></div>', f'<div class="pgrid" id="shop-grid"></div><p class="cap" style="margin:20px 0 0"><a class="lnk" href="{hub("prod", lang)}">{e(x("prod_hub_link", lang))} →</a></p>', 1)
         h = h.replace('<div class="legal g cap mu">', link_index(lang) + '<div class="legal g cap mu">', 1)
         h = h.replace('</style>', PAGES_CSS_HOME + '</style>', 1)
+        ig_roman = '<a class="cap lnk" href="https://www.instagram.com/roma_pokrasit/" target="_blank" rel="noopener">@roma_pokrasit</a>'
+        assert h.count(ig_roman) == 1, 'founder block changed: update build.py'
+        h = h.replace(ig_roman, ig_roman + f'<a class="cap lnk" href="{art_url("roman", lang)}">{e(x("roman_page", lang))} →</a>', 1)
         assert 'id="promoMore" href="#services"' in h, 'promo block changed: update build.py'
         h = h.replace('id="promoMore" href="#services"', f'id="promoMore" href="{svc_url("nails", lang)}"', 1)
         write(alts[lang], h)
@@ -665,10 +679,10 @@ def build_misc():
          [f"- [{L(a['t'], 'es')}]({abs_url(art_url(a['id'], 'es'))}) · [EN]({abs_url(art_url(a['id'], 'en'))}) · [RU]({abs_url(art_url(a['id'], 'ru'))})" for a in ALL_ARTS] + \
          ['', '## Products', '', f'- [Productos Schwarzkopf Professional]({abs_url(hub("prod", "es"))}) · [EN]({abs_url(hub("prod", "en"))}) · [RU]({abs_url(hub("prod", "ru"))})', '']
     # Q&A guides: their concrete answers are repeated in llms.txt in three languages
-    for gid, head in QA_GUIDES:
+    for gid, head, note in QA_GUIDES:
         g = ART_BY_ID.get(gid)
         if not g: continue
-        qa = [f'## {head}', '', f"- Full guide with general questions (what it is, differences, upkeep, how to choose): [ES]({abs_url(art_url(gid, 'es'))}) · [EN]({abs_url(art_url(gid, 'en'))}) · [RU]({abs_url(art_url(gid, 'ru'))})"]
+        qa = [f'## {head}', '', f"- {note}: [ES]({abs_url(art_url(gid, 'es'))}) · [EN]({abs_url(art_url(gid, 'en'))}) · [RU]({abs_url(art_url(gid, 'ru'))})"]
         for lg in ('es', 'en', 'ru'):
             for k, v in g['b'][lg]:
                 if k == 'faq': qa += [f'- Q: {q} A: {an}' for q, an in v]

@@ -552,7 +552,7 @@ section[id],footer[id]{scroll-margin-top:56px}
 <main>
 <!-- ================= HERO ================= -->
 <section class="hero" id="top" aria-label="KULTURA Beauty Studio">
-  <div class="hero-bg" aria-hidden="true"><img src="img3/hero.jpg" alt="" fetchpriority="high"></div>
+  <div class="hero-bg" aria-hidden="true"><img src="img3/hero.jpg" alt="Rubio con ondas · KULTURA Beauty Studio, Buenos Aires" data-ta="alt_hero" fetchpriority="high"></div>
   <div class="hero-run cap" aria-hidden="true"><div class="run" id="topRun"></div></div>
 
   <div class="hero-head g">
@@ -863,7 +863,7 @@ section[id],footer[id]{scroll-margin-top:56px}
 
 <div class="lbx" id="lbx" role="dialog" aria-modal="true" aria-label="Lookbook" hidden>
   <div class="lbx-top g"><span class="cap mu" id="lbxN"></span><button class="x" type="button" data-close-lbx aria-label="Cerrar" data-ta="close"><svg width="20" height="20"><use href="#i-x"/></svg></button></div>
-  <div class="lbx-st"><img id="lbxImg" alt=""><button class="lbx-nv p" type="button" id="lbxP" aria-label="Anterior" data-ta="prev"><svg width="18" height="18"><use href="#i-l"/></svg></button><button class="lbx-nv n" type="button" id="lbxNx" aria-label="Siguiente" data-ta="next"><svg width="18" height="18"><use href="#i-r"/></svg></button></div>
+  <div class="lbx-st"><img id="lbxImg" alt="KULTURA Beauty Studio"><button class="lbx-nv p" type="button" id="lbxP" aria-label="Anterior" data-ta="prev"><svg width="18" height="18"><use href="#i-l"/></svg></button><button class="lbx-nv n" type="button" id="lbxNx" aria-label="Siguiente" data-ta="next"><svg width="18" height="18"><use href="#i-r"/></svg></button></div>
   <p class="lbx-cap cap mu2" id="lbxCap"></p>
 </div>
 
@@ -953,7 +953,8 @@ const U = {
   pr_more:['Ver manicura rusa','Подробнее о маникюре','See Russian manicure'],
   alt_roman:['Roman, cofundador de KULTURA','Роман, сооснователь KULTURA','Roman, co-founder of KULTURA'],
   alt_rent:['Puesto de trabajo junto a la ventana','Рабочее место у окна','Workstation by the window'],
-  alt_logo:['Logo de KULTURA Beauty Studio en el estudio','Логотип KULTURA Beauty Studio в студии','KULTURA Beauty Studio logo in the studio']
+  alt_logo:['Logo de KULTURA Beauty Studio en el estudio','Логотип KULTURA Beauty Studio в студии','KULTURA Beauty Studio logo in the studio'],
+  alt_hero:['Rubio con ondas · KULTURA Beauty Studio, Buenos Aires','Блонд и волны · студия KULTURA, Буэнос-Айрес','Blonde waves · KULTURA Beauty Studio, Buenos Aires']
 };
 
 /* price rows: name, price from, price to, minutes, note */
@@ -1932,14 +1933,14 @@ function renderJournal(){
   const [f, ...rest] = ARTS;
   $('#jr').innerHTML = `
     <button class="feat" type="button" data-art="${f.id}">
-      <div class="ph"><img src="${f.img}" alt="" loading="lazy" style="object-position:${f.pos}"></div>
+      <div class="ph"><img src="${f.img}" alt="${esc(L(f.t))}" loading="lazy" style="object-position:${f.pos}"></div>
       <span class="meta cap mu"><span>${esc(L(f.k))}</span><span>${f.min} ${t('read')}</span></span>
       <h3 class="d">${esc(L(f.t))}</h3>
       <p class="mu2">${esc(L(f.l))}</p>
     </button>
     <div class="jlist">${rest.map(a => `
       <button class="jitem" type="button" data-art="${a.id}">
-        <div class="ph"><img src="${a.img}" alt="" loading="lazy" style="object-position:${a.pos}"></div>
+        <div class="ph"><img src="${a.img}" alt="${esc(L(a.t))}" loading="lazy" style="object-position:${a.pos}"></div>
         <span><span class="meta cap mu"><span>${esc(L(a.k))}</span><span>${a.min} ${t('read')}</span></span><h3 class="d">${esc(L(a.t))}</h3><span class="mu2" style="font-size:14px">${esc(L(a.l))}</span></span>
       </button>`).join('')}</div>`;
 }
@@ -2038,7 +2039,7 @@ function openArt(id){
       <h1 class="d" id="rdTitle">${esc(L(a.t))}</h1>
       <p class="lead it">${esc(L(a.l))}</p>
     </header>
-    <div class="rd-img"><div class="ph"><img src="${a.img}" alt="" style="object-position:${a.pos}"></div></div>
+    <div class="rd-img"><div class="ph"><img src="${a.img}" alt="${esc(L(a.t))}" style="object-position:${a.pos}"></div></div>
     <div class="rd-body">${body}</div>
     <div class="rd-cta">
       <p class="d">${t('rd_cta')}</p>
