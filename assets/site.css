@@ -108,7 +108,7 @@ section[id],footer[id]{scroll-margin-top:56px}
 .wd:nth-child(1){padding-left:24%}
 .wd:nth-child(2){padding-left:1%;animation-delay:.08s}
 .wd:nth-child(3){padding-left:38%;animation-delay:.16s}
-.h1-sub{display:block;margin-top:clamp(14px,1.8vw,26px);padding-left:38%;font-family:var(--s);color:var(--mute2);text-wrap:balance;animation:up 1.2s var(--e) .24s both}
+.h1-sub{display:block;margin-top:clamp(14px,2.4vw,30px);padding-left:38%;font-family:var(--s);color:var(--mute2);text-wrap:balance;animation:up 1.2s var(--e) .24s both}
 @keyframes up{from{opacity:0;transform:translateY(60px)}to{opacity:1;transform:none}}
 .strand{position:absolute;inset:0;z-index:3;pointer-events:none;width:100%;height:100%}
 .strand path{stroke-dasharray:2600;stroke-dashoffset:2600;animation:draw 3.4s var(--e) .35s forwards}
@@ -381,6 +381,7 @@ section[id],footer[id]{scroll-margin-top:56px}
   .pgrid.pro{grid-template-columns:repeat(2,minmax(0,1fr))}
   .feat{grid-column:1 / span 7}
 }
+@media (min-width:761px) and (max-width:900px){.h1-sub{padding-left:1%}}
 @media (max-width:760px){
   .burger{display:inline-flex}
   .bar-in{gap:10px}
@@ -391,7 +392,7 @@ section[id],footer[id]{scroll-margin-top:56px}
   .langs-m button,.bar .langs button,.menu .langs button{min-width:38px;height:34px;padding:0 9px;border-radius:999px;color:var(--mute2);font:600 12px/1 var(--s);letter-spacing:.08em;transition:background-color .2s ease,color .2s ease}
   .langs-m button[aria-pressed="true"],.bar .langs button[aria-pressed="true"],.menu .langs button[aria-pressed="true"]{background:var(--fg);color:#000}
   .hh-r{margin-top:-4px}
-  .hero{min-height:max(700px,100svh)}
+  .hero{min-height:max(760px,100svh)}
   .hero-nav{display:none}
   .words{padding-top:clamp(110px,16vh,150px)}
   .wd{font-size:clamp(64px,20vw,86px)}
