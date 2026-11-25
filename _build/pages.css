@@ -52,6 +52,8 @@ body.sp{padding-top:calc(58px + env(safe-area-inset-top,0px))}
 .sp-faq details[open] summary::after{content:"–"}
 .sp-faq details p{margin:0 0 16px;font-size:16px;line-height:1.65;color:#DCD8CF}
 .rd-body .sp-faq{margin-top:44px}
+.rd-body li a{text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px;text-decoration-color:var(--mute)}
+.rd-body li a:hover b{color:var(--hi)}
 
 .sp-rel{display:flex;flex-direction:column;gap:4px;padding:18px 0 0;border-top:1px solid var(--line);text-decoration:none}
 .sp-rel .d{font-size:clamp(26px,2.4vw,34px);line-height:1.05}

@@ -18,6 +18,7 @@ from articles_batch2 import ARTICLES_B2                   # noqa: E402
 from articles_batch3 import ARTICLES_B3                   # noqa: E402
 from articles_batch4 import ARTICLES_B4                   # noqa: E402
 from articles_batch5 import ARTICLES_B5                   # noqa: E402
+from articles_batch6 import ARTICLES_B6                   # noqa: E402
 
 DOMAIN = 'https://kulturaba.com'
 TODAY = '2026-11-14'
@@ -103,9 +104,13 @@ def wa(msg): return WA + '?text=' + __import__('urllib.parse').parse.quote(msg)
 # ------------------------------------------------------------------ extra UI strings
 X = {
  'svc_all': ['Servicios y precios', 'Услуги и цены', 'Services and prices'],
- 'svc_all_lead': ['Color, cortes, tratamientos, manicura rusa, pedicura SMART, pestañas y cejas en Microcentro, Buenos Aires. Precios de referencia en pesos, según el sistema de reservas del estudio (noviembre de 2026).',
-                  'Окрашивание, стрижки, уход, русский маникюр, SMART-педикюр, ресницы и брови в Микроцентро, Буэнос-Айрес. Ориентировочные цены в песо по системе записи студии (ноябрь 2026).',
-                  'Colour, cuts, treatments, Russian manicure, SMART pedicure, lashes and brows in Microcentro, Buenos Aires. Guide prices in pesos from the studio booking system (November 2026).'],
+ 'svc_all_lead': ['Todo en un solo lugar: color, cortes, peinados, tratamientos, manicura rusa, pedicura SMART, pestañas y cejas en Microcentro, Buenos Aires. Precios de referencia en pesos, según el sistema de reservas del estudio (noviembre de 2026).',
+                  'Всё в одном месте: окрашивание, стрижки, укладки, уход, русский маникюр, SMART-педикюр, ресницы и брови в Микроцентро, Буэнос-Айрес. Ориентировочные цены в песо по системе записи студии (ноябрь 2026).',
+                  'Everything in one place: colour, cuts, blow-dries, treatments, Russian manicure, SMART pedicure, lashes and brows in Microcentro, Buenos Aires. Guide prices in pesos from the studio booking system (November 2026).'],
+ 'svc_all_desc': ['Todo en un solo lugar en Microcentro, Buenos Aires: color, cortes, peinados, tratamientos, manicura rusa, pedicura SMART, pestañas y cejas. Precios en pesos.',
+                  'Всё в одном месте в Микроцентро, Буэнос-Айрес: окрашивание, стрижки, укладки, уход, русский маникюр, SMART-педикюр, ресницы и брови. Цены в песо.',
+                  'Everything in one place in Microcentro, Buenos Aires: colour, cuts, blow-dries, treatments, Russian manicure, SMART pedicure, lashes and brows. Prices in pesos.'],
+ 'one_place_link': ['Varios servicios en una visita: cómo armar tu día de belleza', 'Несколько процедур за один визит: как собрать день красоты', 'Several services in one visit: how to plan your beauty day'],
  'blog_lead': ['Técnicas, cuidado y respuestas a lo que más nos preguntan en el estudio.', 'Техники, уход и ответы на частые вопросы из студии.', 'Techniques, care and answers to what we’re asked most in the studio.'],
  'prod_lead': ['Cuidado y styling de Schwarzkopf Professional para casa. Todos los productos se compran en el estudio o por WhatsApp. KULTURA es partner oficial de Schwarzkopf Professional.',
                'Уход и стайлинг Schwarzkopf Professional для дома. Всё можно купить в студии или заказать в WhatsApp. KULTURA — официальный партнёр Schwarzkopf Professional.',
@@ -135,9 +140,9 @@ X = {
  'home_title': ['KULTURA · Salón de belleza ruso en Microcentro, Buenos Aires',
                 'KULTURA — русский салон красоты в Буэнос-Айресе',
                 'KULTURA · Russian beauty salon in Microcentro, Buenos Aires'],
- 'home_desc': ['Salón de belleza ruso en Microcentro, Buenos Aires: AirTouch, rubio total, cortes, manicura rusa, pedicura SMART, pestañas y cejas. Partner oficial de Schwarzkopf.',
-               'Русский салон красоты в Микроцентро, Буэнос-Айрес: AirTouch, тотал блонд, стрижки, русский маникюр, SMART-педикюр, ресницы и брови. Партнёр Schwarzkopf Professional.',
-               'Russian beauty salon in Microcentro, Buenos Aires: AirTouch, total blonde, cuts, Russian manicure, SMART pedicure, lashes and brows. Official Schwarzkopf partner.'],
+ 'home_desc': ['Salón de belleza ruso en Microcentro, Buenos Aires: AirTouch, cortes, manicura rusa, pedicura SMART, pestañas y cejas en un solo lugar. Partner de Schwarzkopf.',
+               'Русский салон красоты в Микроцентро, Буэнос-Айрес: AirTouch, стрижки, русский маникюр, SMART-педикюр, ресницы и брови в одном месте. Партнёр Schwarzkopf.',
+               'Russian beauty salon in Microcentro, Buenos Aires: AirTouch, cuts, Russian manicure, SMART pedicure, lashes and brows in one place. Schwarzkopf partner.'],
  'blog_desc': ['Journal de KULTURA: técnicas de color, manicura rusa, pedicura SMART, pestañas y cejas, cuidado del pelo y respuestas a lo que más nos preguntan en el estudio.',
                'Журнал KULTURA: техники окрашивания, русский маникюр, SMART-педикюр, ресницы и брови, уход за волосами и ответы на частые вопросы клиентов студии.',
                'KULTURA Journal: colour techniques, Russian manicure, SMART pedicure, lashes and brows, hair care and answers to what we’re asked most in the studio.'],
@@ -189,7 +194,7 @@ for a in ARTS:
     ALL_ARTS.append(dict(id=a['id'], slug=ARTICLE_SLUGS[a['id']], img=a['img'], pos=a.get('pos', '50% 50%'), min=a['min'],
                          svc=a.get('svc'), k=a['k'], t=a['t'], l=a['l'], by=a['by'], b=a['b'], date='2026-11-13',
                          title={g: L(a['t'], g) + ' | KULTURA' for g in LANGS}, desc={g: ART_DESC.get(a['id'], {}).get(g) or L(a['l'], g) for g in LANGS}, new=False))
-for a in ARTICLES_B5 + ARTICLES_B4 + ARTICLES_B3 + ARTICLES_B2 + ARTICLES_NEW:   # newest batch first in the Journal
+for a in ARTICLES_B6 + ARTICLES_B5 + ARTICLES_B4 + ARTICLES_B3 + ARTICLES_B2 + ARTICLES_NEW:   # newest batch first in the Journal
     d = dict(a); d['new'] = True
     if d['id'] == 'salon-ruso': d['svc'] = None
     ALL_ARTS.append(d)
@@ -198,7 +203,8 @@ ART_BY_ID = {a['id']: a for a in ALL_ARTS}
 QA_GUIDES = [('airtouch-guia', 'Questions and answers: AirTouch and blonde in Buenos Aires', 'Full guide with general questions (what it is, differences, upkeep, how to choose)'),
              ('manicura-guia', 'Questions and answers: Russian manicure in Buenos Aires', 'Full guide with general questions (what it is, differences, whether it hurts, upkeep, how to choose)'),
              ('salon-ruso', 'Questions and answers: Russian beauty salon in Buenos Aires', 'Full page about the studio and the Russian school of beauty'),
-             ('roman', 'Questions and answers: Roman, co-founder and head colourist', 'Full profile with techniques and prices')]
+             ('roman', 'Questions and answers: Roman, co-founder and head colourist', 'Full profile with techniques and prices'),
+             ('todo-en-un-lugar', 'Questions and answers: hair, nails, lashes and brows in one place', 'Full page: what can be done in one visit, prices and how long each service takes')]
 def art_url(aid, lang): return f"{hub('blog', lang)}{ART_BY_ID[aid]['slug'][lang]}/"
 
 TY_EN = {'sh': 'shampoo', 'co': 'conditioner', 'tr': 'treatment', 'ma': 'mask', 'sp': 'spray', 'se': 'serum'}
@@ -404,13 +410,14 @@ def write(path, content):
 SITEMAP = []   # (alts dict)
 
 # ------------------------------------------------------------------ blocks -> html
-def blocks_html(blocks):
+def blocks_html(blocks, lang='es'):
     out, faqs = [], []
     for blk in blocks:
         k, v = blk[0], blk[1]
         if k == 'h': out.append(f'<h2 class="d">{e(v)}</h2>')
         elif k == 'q': out.append(f'<blockquote class="it">{e(v)}</blockquote>')
         elif k == 'ul': out.append('<ul>' + ''.join(f'<li><b>{e(b)}</b>{(" " + e(r)) if r else ""}</li>' for b, r in v) + '</ul>')
+        elif k == 'sv': out.append('<ul>' + ''.join(f'<li><a href="{svc_url(sid, lang)}"><b>{e(b)}</b></a>{(" " + e(r)) if r else ""}</li>' for sid, b, r in v) + '</ul>')
         elif k == 'img': out.append(f'<figure class="rd-fig">{img(v[0], v[1], sizes="(max-width:800px) 100vw, 760px", dims=False)}<figcaption class="cap mu">{e(v[1])}</figcaption></figure>')
         elif k == 'imgs': out.append('<div class="rd-pair">' + ''.join(f'<figure class="rd-fig"><div class="ph">{img(s, c, sizes="(max-width:800px) 50vw, 380px")}</div><figcaption class="cap mu">{e(c)}</figcaption></figure>' for s, c in v) + '</div>')
         elif k == 'faq': faqs.extend(v)
@@ -525,11 +532,12 @@ def build_svc_hub():
                 items.append(f'<li><a href="{svc_url(s["id"], lang)}"><span class="d">{e(L(s["name"], lang))}</span><small class="cap mu">{e(p)}</small></a></li>')
             groups.append(f'<h2 class="cap mu">{e(t("g_" + g, lang))}</h2><ul class="sp-list">{"".join(items)}</ul>')
         body = f'''<section class="sp-hub g w"><h1 class="d">{e(x('svc_all', lang))}</h1><p class="lead it">{e(x('svc_all_lead', lang))}</p>{''.join(groups)}
+<p class="cap" style="margin:28px 0 0"><a class="lnk" href="{art_url('todo-en-un-lugar', lang)}">{e(x('one_place_link', lang))} →</a></p>
 <div class="acts"><a class="btn" href="{BOOK}" target="_blank" rel="noopener">{e(t('sh_book', lang))}</a><a class="btn btn-o" href="{e(wa(t('wa_hi', lang)))}" target="_blank" rel="noopener">WhatsApp</a></div></section>'''
         nodes = [salon_node(lang, full=True), {'@type': 'CollectionPage', 'name': x('svc_all', lang), 'url': abs_url(alts[lang]),
                  'mainEntity': {'@type': 'ItemList', 'itemListElement': [{'@type': 'ListItem', 'position': i + 1, 'url': abs_url(svc_url(s['id'], lang)), 'name': L(s['name'], lang)} for i, s in enumerate(SVC)]}}]
         title = {'es': 'Servicios y precios · Peluquería y uñas en Microcentro | KULTURA', 'ru': 'Услуги и цены салона красоты в Буэнос-Айресе | KULTURA', 'en': 'Services and prices · Hair and nails in Buenos Aires | KULTURA'}[lang]
-        write(alts[lang], page(lang, alts[lang], alts, title, x('svc_all_lead', lang)[:158], body, nodes, None, 'website',
+        write(alts[lang], page(lang, alts[lang], alts, title, x('svc_all_desc', lang), body, nodes, None, 'website',
                                [(x('home', lang), home_url(lang)), (t('n_services', lang), alts[lang])]))
 
 # ------------------------------------------------------------------ articles
@@ -541,16 +549,17 @@ def build_articles():
         nx = ALL_ARTS[(i + 1) % len(ALL_ARTS)]
         for lang in LANGS:
             blocks = L(a['b'], lang)
-            bhtml, faqs = blocks_html(blocks)
+            bhtml, faqs = blocks_html(blocks, lang)
             svc = next((s for s in SVC if s['id'] == a.get('svc')), None)
             cta2 = (f'<a class="btn btn-o" href="{svc_url(svc["id"], lang)}">{e(L(svc["name"], lang))}: {e(t("wk_more", lang).lower())}</a>' if svc
                     else f'<a class="btn btn-o" href="{hub("svc", lang)}">{e(x("svc_all", lang))}</a>')
+            wa_btn = f'<a class="btn btn-o" href="{e(wa(L(a["wa"], lang)))}" target="_blank" rel="noopener">WhatsApp</a>' if a.get('wa') else ''
             body = f'''<article class="sp-art g">
 <header class="rd-head"><span class="meta cap mu"><span>{e(L(a['k'], lang))}</span><span>{a['min']} {e(t('read', lang))}</span><span>{e(L(a['by'], lang))}</span></span>
 <h1 class="d">{e(L(a['t'], lang))}</h1><p class="lead it">{e(L(a['l'], lang))}</p></header>
 <div class="rd-img"><div class="ph">{img(a['img'], L(a['t'], lang), f"object-position:{a.get('pos', '50% 50%')}", hero=True, sizes=SZ_ART)}</div></div>
 <div class="rd-body">{bhtml}{faq_html(faqs, lang)}</div>
-{promo_card(svc, lang) if svc else ''}<div class="rd-cta"><p class="d">{e(t('rd_cta', lang))}</p><div style="display:flex;flex-wrap:wrap;gap:10px"><a class="btn" href="{BOOK}" target="_blank" rel="noopener">{e(t('sh_book', lang))}</a>{cta2}</div></div>
+{promo_card(svc, lang) if svc else ''}<div class="rd-cta"><p class="d">{e(t('rd_cta', lang))}</p><div style="display:flex;flex-wrap:wrap;gap:10px"><a class="btn" href="{BOOK}" target="_blank" rel="noopener">{e(t('sh_book', lang))}</a>{wa_btn}{cta2}</div></div>
 <div class="rd-next"><a href="{art_url(nx['id'], lang)}"><span class="cap mu">{e(t('rd_next', lang))}</span><span class="d">{e(L(nx['t'], lang))}</span></a></div>
 </article>'''
             author = ({'@type': 'Person', 'name': 'Roman', 'jobTitle': L(a['by'], lang)} if 'Roman' in L(a['by'], 'en')
@@ -739,6 +748,10 @@ def build_misc():
           '- Team: Roman (co-founder, head colourist), Valeria and Tatiana (manicure and pedicure), Sofía (lash extensions, 4 years’ experience, trains beginners), Nikolai (brow architecture, brow and lash lamination)',
           '- Prices in Argentine pesos from the studio booking system, November 2026',
           '- Nail offer until 15 December 2026: 15% off the first nail visit (manicure, pedicure, four-hand manicure and pedicure) plus another 15% back in points for the next visit. Booking by WhatsApp.',
+          '', '## Everything in one place', '',
+          f"- Hair, nails, lashes and brows are done at one address, so several services can be booked for the same day: colour (AirTouch, balayage, total blonde, toning, roots), women’s, men’s and children’s cuts, blow-dries, hair treatments, Russian manicure, Russian SMART pedicure, four-hand manicure and pedicure (two nail artists at once, about two and a half hours), lash extensions, brows. By appointment only; the studio lines up the appointments on WhatsApp. Guide times: {abs_url(art_url('todo-en-un-lugar', 'en'))}",
+          f"- Peluquería, manicura, pedicura, pestañas y cejas en un solo lugar (salón de belleza integral en Microcentro): se pueden reservar varios servicios para el mismo día, con cita previa. Detalles y tiempos: {abs_url(art_url('todo-en-un-lugar', 'es'))}",
+          f"- Волосы, ногти, ресницы и брови в одном месте: несколько процедур можно записать на один день, только по записи. Подробнее и время: {abs_url(art_url('todo-en-un-lugar', 'ru'))}",
           '', '## AirTouch in Buenos Aires', '',
           '- Where to get AirTouch in Buenos Aires: KULTURA Beauty Studio, Tte. Gral. Juan D. Perón 683, Microcentro. Done by Roman, co-founder and head colourist. AirTouch, balayage or highlights from ARS 180,000 to ARS 455,000 depending on length and density; a session takes up to six hours; a test strand costs ARS 20,000. Spanish and Russian spoken. Details: https://kulturaba.com/en/services/airtouch/',
           '- Dónde hacer AirTouch en Buenos Aires: KULTURA Beauty Studio, Tte. Gral. Juan D. Perón 683, Microcentro. Lo hace Roman, cofundador y colorista principal. Desde $180.000; sesión de hasta seis horas. Detalles: https://kulturaba.com/servicios/airtouch/',
