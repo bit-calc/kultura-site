@@ -291,6 +291,11 @@ def footer(lang):
 <div class="legal g cap mu"><span>© 2026 KULTURA Beauty Studio</span><span>{e(t('legal', lang))}</span></div>
 </footer>'''
 
+def _ver(data):
+    import hashlib
+    return hashlib.md5(data.encode('utf-8')).hexdigest()[:8]
+# stylesheets are cached by browsers for hours: the ?v= tag changes with the content, so a new deploy is picked up at once
+CSS_V = _ver(re.search(r'<style>(.*?)</style>', APP, re.S).group(1)) + _ver(open(os.path.join(HERE, 'pages.css'), encoding='utf-8').read())
 FONT_CSS = 'https://fonts.googleapis.com/css2?family=Oranienbaum&family=Playfair+Display:ital@1&family=Manrope:wght@400;500;600;700&display=swap'
 # font stylesheet is loaded without blocking the first paint (text shows in the fallback font, then swaps)
 FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
@@ -372,7 +377,7 @@ def page(lang, path, alts, title, desc, body, nodes, og_img=None, og_type='websi
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 {pre}{FONTS}
-<link rel="stylesheet" href="/assets/site.css"><link rel="stylesheet" href="/assets/pages.css">
+<link rel="stylesheet" href="/assets/site.css?v={CSS_V[:8]}"><link rel="stylesheet" href="/assets/pages.css?v={CSS_V[8:]}">
 {ld(nodes)}
 </head>
 <body class="sp">
