@@ -338,11 +338,11 @@ def img(src, alt, style='', hero=False, sizes='(max-width:860px) 100vw, 50vw', t
     """<picture> with WebP sources and a JPEG fallback; hero images load first, the rest lazily."""
     src = src.lstrip('/'); i = img_info(src)
     st = f' style="{style}"' if style else ''
-    pr = ' fetchpriority="high"' if hero else ' loading="lazy"'
-    if not i: return f'<img src="/{src}" alt="{e(alt)}"{pr} decoding="async"{st}>'
+    pr = ' fetchpriority="high"' if hero else ' loading="lazy" decoding="async"'   # the main photo is decoded right away, the rest in the background
+    if not i: return f'<img src="/{src}" alt="{e(alt)}"{pr}{st}>'
     wh = f' width="{i["w"]}" height="{i["h"]}"' if dims else ''
     return (f'<picture style="display:contents"><source type="image/webp" srcset="{img_srcset(src, thumb)}" sizes="{sizes}">'
-            f'<img src="/{src}" alt="{e(alt)}"{wh}{pr} decoding="async"{st}></picture>')
+            f'<img src="/{src}" alt="{e(alt)}"{wh}{pr}{st}></picture>')
 
 def preload_img(src, sizes):
     if not src or not img_info(src): return ''
