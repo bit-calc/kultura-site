@@ -49,12 +49,16 @@ GSC_META = '<meta name="google-site-verification" content="7s5pBvu950L4dqgWdP1yS
 # Google Ads tag (account 430-265-1211) + conversion «Clic en WhatsApp (sitio)» on clicks to WhatsApp links.
 GADS_ID = 'AW-18285417218'
 GADS_WA_LABEL = ''   # conversion label from Google Ads (send_to = GADS_ID/label); empty = tag only, no conversion event
-GTAG = (f'<script async src="https://www.googletagmanager.com/gtag/js?id={GADS_ID}"></script>'
-        '<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}'
+# The gtag.js library is fetched after the page has loaded, so it does not compete with styles and the main photo
+# (events are queued in dataLayer from the first moment, nothing is lost).
+GTAG_LOAD = ("(function(){function l(){var s=document.createElement('script');s.async=true;"
+             f"s.src='https://www.googletagmanager.com/gtag/js?id={GADS_ID}';document.head.appendChild(s)}}"
+             "if(document.readyState==='complete')setTimeout(l,0);else window.addEventListener('load',function(){setTimeout(l,0)})})();")
+GTAG = ('<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}'
         f"gtag('js',new Date());gtag('config','{GADS_ID}');"
         + (("document.addEventListener('click',function(e){var a=e.target&&e.target.closest&&e.target.closest('a[href*=\"wa.me/\"],a[href*=\"api.whatsapp.com\"],a[href^=\"whatsapp:\"]');"
             f"if(a)gtag('event','conversion',{{send_to:'{GADS_ID}/{GADS_WA_LABEL}'}});}},true);") if GADS_WA_LABEL else '')
-        + '</script>')
+        + GTAG_LOAD + '</script>')
 
 # ------------------------------------------------------------------ data from the app
 APP = open(os.path.join(HERE, 'app.html'), encoding='utf-8').read()

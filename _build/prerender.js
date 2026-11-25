@@ -3,7 +3,7 @@
 const http = require('http'), fs = require('fs'), path = require('path');
 const { chromium } = require('playwright');
 const ROOT = path.resolve(__dirname, '..');
-const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.jpg': 'image/jpeg', '.png': 'image/png', '.svg': 'image/svg+xml', '.mp4': 'video/mp4', '.txt': 'text/plain', '.xml': 'application/xml' };
+const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.png': 'image/png', '.svg': 'image/svg+xml', '.mp4': 'video/mp4', '.txt': 'text/plain', '.xml': 'application/xml' };
 
 const server = http.createServer((req, res) => {
   let p = decodeURIComponent(req.url.split('?')[0]);
@@ -24,6 +24,7 @@ const server = http.createServer((req, res) => {
     await page.waitForFunction(() => document.querySelectorAll('#slist .svc').length > 0 && document.querySelectorAll('#jr [data-art]').length > 0);
     const html = await page.evaluate(() => {
       document.querySelectorAll('video').forEach(v => { v.pause(); });
+      document.querySelectorAll('script[src*="googletagmanager.com"]').forEach(s => s.remove());   // the tag loader adds it again in the visitor's browser
       return '<!doctype html>\n' + document.documentElement.outerHTML;
     });
     fs.writeFileSync(path.join(ROOT, route, 'index.html'), html);
