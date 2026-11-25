@@ -131,6 +131,7 @@ section[id],footer[id]{scroll-margin-top:56px}
 .wd:nth-child(1){padding-left:24%}
 .wd:nth-child(2){padding-left:1%;animation-delay:.08s}
 .wd:nth-child(3){padding-left:38%;animation-delay:.16s}
+.h1-sub{display:block;margin-top:clamp(14px,1.8vw,26px);padding-left:38%;font-family:var(--s);color:var(--mute2);text-wrap:balance;animation:up 1.2s var(--e) .24s both}
 @keyframes up{from{opacity:0;transform:translateY(60px)}to{opacity:1;transform:none}}
 .strand{position:absolute;inset:0;z-index:3;pointer-events:none;width:100%;height:100%}
 .strand path{stroke-dasharray:2600;stroke-dashoffset:2600;animation:draw 3.4s var(--e) .35s forwards}
@@ -419,6 +420,7 @@ section[id],footer[id]{scroll-margin-top:56px}
   .wd{font-size:clamp(64px,20vw,86px)}
   .wd:nth-child(1){padding-left:22%}
   .wd:nth-child(3){padding-left:28%}
+  .h1-sub{padding-left:28%}
   .blurb{left:var(--gx);top:auto;bottom:250px;width:min(240px,60vw)}
   .badge{left:auto;right:var(--gy);bottom:34px;width:168px;height:168px}
   .reel{display:none}
@@ -485,7 +487,7 @@ section[id],footer[id]{scroll-margin-top:56px}
 @media (prefers-reduced-motion:reduce){
   .pc .ph img{transition:none}
   html{scroll-behavior:auto}
-  .run,.spin,.wd,.strand path{animation:none}
+  .run,.spin,.wd,.h1-sub,.strand path{animation:none}
   .strand path{stroke-dashoffset:0}
   .bar,.sheet,.scrim,.reader,.lbx,.tile img,.badge,.wa-f,.langs button{transition:none}
   .wa-f,.wa-f.on{transform:none}
@@ -573,7 +575,7 @@ section[id],footer[id]{scroll-margin-top:56px}
     </div>
   </div>
 
-  <h1 class="words d g"><span class="wd">Kultura</span><span class="wd">Beauty</span><span class="wd">Studio</span></h1>
+  <h1 class="words d g"><span class="wd">Kultura</span><span class="wd">Beauty</span><span class="wd">Studio</span><span class="h1-sub cap" data-t="h1_sub">Salón de belleza ruso en Microcentro, Buenos Aires</span></h1>
 
   <svg class="strand" viewBox="0 0 1440 880" preserveAspectRatio="none" aria-hidden="true"><path d="M1012 -20C990 90 1040 160 1001 250S930 400 975 505 1068 640 1020 760 948 860 990 900" fill="none" stroke="#EEEAE2" stroke-opacity=".55" stroke-width="1" vector-effect="non-scaling-stroke"></path><path d="M300 -20C330 120 270 210 318 330" fill="none" stroke="#EEEAE2" stroke-opacity=".3" stroke-width="1" vector-effect="non-scaling-stroke"></path></svg>
 
@@ -1129,7 +1131,8 @@ const U = {
   n_about:['Estudio','О студии','Studio'], n_services:['Servicios','Услуги','Services'], n_works:['Trabajos','Работы','Work'], n_team:['Equipo','Команда','Team'],
   n_shop:['Productos','Продукция','Products'], n_journal:['Journal','Журнал','Journal'], n_prices:['Precios','Цены','Prices'], n_visit:['Contacto','Контакты','Contact'],
   book:['Reservar','Записаться','Book'], book_online:['Reservar online','Онлайн-запись','Book online'], close:['Cerrar','Закрыть','Close'], prev:['Anterior','Назад','Previous'], next:['Siguiente','Вперёд','Next'],
-  h_b1:['KULTURA es un beauty studio en Microcentro, Buenos Aires. No para una ocasión especial. Para la vida.','KULTURA — бьюти-студия в Микроцентро, Буэнос-Айрес. Не для особого случая. Для жизни.','KULTURA is a beauty studio in Microcentro, Buenos Aires. Not for a special occasion. For life.'],
+  h1_sub:['Salón de belleza ruso en Microcentro, Buenos Aires','Русский салон красоты в Микроцентро, Буэнос-Айрес','Russian beauty salon in Microcentro, Buenos Aires'],
+h_b1:['KULTURA es un beauty studio en Microcentro, Buenos Aires. No para una ocasión especial. Para la vida.','KULTURA — бьюти-студия в Микроцентро, Буэнос-Айрес. Не для особого случая. Для жизни.','KULTURA is a beauty studio in Microcentro, Buenos Aires. Not for a special occasion. For life.'],
   h_b2:['Color y corte, uñas, cejas y pestañas. Partner oficial de Schwarzkopf Professional.','Цвет и стрижка, ногти, брови и ресницы. Официальный партнёр Schwarzkopf Professional.','Colour and cut, nails, brows and lashes. Official Schwarzkopf Professional partner.'],
   h_see1:['Mirá','Смотреть','See'], h_see2:['nuestros trabajos','наши работы','our work'],
   h_badge_a:['Reservar online o por WhatsApp','Записаться онлайн или в WhatsApp','Book online or on WhatsApp'],
