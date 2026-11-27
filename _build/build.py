@@ -274,7 +274,7 @@ def header(lang, alts):
 <a class="mark cap" href="{home_url(lang)}">{MARK}<span>KULTURA</span></a>
 <nav class="sp-nav cap" aria-label="{e(t('n_services', lang))}"><a href="{hub('svc', lang)}">{e(t('n_services', lang))}</a><a href="{hub('blog', lang)}">{e(t('n_journal', lang))}</a><a href="{hub('prod', lang)}">{e(t('n_shop', lang))}</a><a href="{home_url(lang)}#prices">{e(t('n_prices', lang))}</a><a href="#visit">{e(t('n_visit', lang))}</a></nav>
 <div class="sp-langs cap" role="group" aria-label="Idioma / Язык / Language">{langs}</div>
-<a class="btn" href="{BOOK}" target="_blank" rel="noopener">{e(t('book', lang))}</a>
+<a class="btn" href="{e(wa(t('wa_hi', lang)))}" target="_blank" rel="noopener">{e(t('book', lang))}</a>
 </div></header>'''
 
 def link_index(lang):
@@ -451,9 +451,9 @@ def who_line(w, lang):
     return (t('whos', lang) if w in ('nails', 'browslash') else t('who', lang)) + ' ' + L(WHO[w], lang)
 
 def cta_buttons(s, lang):
-    book = f'<a class="btn" href="{BOOK}" target="_blank" rel="noopener">{e(t("sh_book", lang))}</a>'
-    w = f'<a class="btn btn-o" href="{e(wa(t("wa_svc", lang) + L(s["name"], lang)))}" target="_blank" rel="noopener">WhatsApp</a>'
-    return w + book if s.get('wa') else book + w
+    book = f'<a class="btn btn-o" href="{BOOK}" target="_blank" rel="noopener">{e(t("sh_book", lang))}</a>'
+    w = f'<a class="btn" href="{e(wa(t("wa_book", lang) + L(s["name"], lang)))}" target="_blank" rel="noopener">{e(t("sh_wa_book", lang))}</a>'
+    return w + book   # WhatsApp first: the admin finds a slot; online booking stays as the second button
 
 # ------------------------------------------------------------------ nail promo (first nail visit −15% + 15% in points, until 15.12.2026)
 # Terms come from the studio owner (16.11.2026). The block hides itself after PROMO_UNTIL, so nothing stale stays online.
@@ -533,7 +533,7 @@ def build_svc_hub():
             groups.append(f'<h2 class="cap mu">{e(t("g_" + g, lang))}</h2><ul class="sp-list">{"".join(items)}</ul>')
         body = f'''<section class="sp-hub g w"><h1 class="d">{e(x('svc_all', lang))}</h1><p class="lead it">{e(x('svc_all_lead', lang))}</p>{''.join(groups)}
 <p class="cap" style="margin:28px 0 0"><a class="lnk" href="{art_url('todo-en-un-lugar', lang)}">{e(x('one_place_link', lang))} →</a></p>
-<div class="acts"><a class="btn" href="{BOOK}" target="_blank" rel="noopener">{e(t('sh_book', lang))}</a><a class="btn btn-o" href="{e(wa(t('wa_hi', lang)))}" target="_blank" rel="noopener">WhatsApp</a></div></section>'''
+<div class="acts"><a class="btn" href="{e(wa(t('wa_hi', lang)))}" target="_blank" rel="noopener">{e(t('sh_wa_book', lang))}</a><a class="btn btn-o" href="{BOOK}" target="_blank" rel="noopener">{e(t('sh_book', lang))}</a></div></section>'''
         nodes = [salon_node(lang, full=True), {'@type': 'CollectionPage', 'name': x('svc_all', lang), 'url': abs_url(alts[lang]),
                  'mainEntity': {'@type': 'ItemList', 'itemListElement': [{'@type': 'ListItem', 'position': i + 1, 'url': abs_url(svc_url(s['id'], lang)), 'name': L(s['name'], lang)} for i, s in enumerate(SVC)]}}]
         title = {'es': 'Servicios y precios · Peluquería y uñas en Microcentro | KULTURA', 'ru': 'Услуги и цены салона красоты в Буэнос-Айресе | KULTURA', 'en': 'Services and prices · Hair and nails in Buenos Aires | KULTURA'}[lang]
@@ -553,13 +553,14 @@ def build_articles():
             svc = next((s for s in SVC if s['id'] == a.get('svc')), None)
             cta2 = (f'<a class="btn btn-o" href="{svc_url(svc["id"], lang)}">{e(L(svc["name"], lang))}: {e(t("wk_more", lang).lower())}</a>' if svc
                     else f'<a class="btn btn-o" href="{hub("svc", lang)}">{e(x("svc_all", lang))}</a>')
-            wa_btn = f'<a class="btn btn-o" href="{e(wa(L(a["wa"], lang)))}" target="_blank" rel="noopener">WhatsApp</a>' if a.get('wa') else ''
+            wa_msg = L(a['wa'], lang) if a.get('wa') else (t('wa_book', lang) + L(svc['name'], lang) if svc else t('wa_hi', lang))
+            wa_btn = f'<a class="btn" href="{e(wa(wa_msg))}" target="_blank" rel="noopener">{e(t("sh_wa_book", lang))}</a>'
             body = f'''<article class="sp-art g">
 <header class="rd-head"><span class="meta cap mu"><span>{e(L(a['k'], lang))}</span><span>{a['min']} {e(t('read', lang))}</span><span>{e(L(a['by'], lang))}</span></span>
 <h1 class="d">{e(L(a['t'], lang))}</h1><p class="lead it">{e(L(a['l'], lang))}</p></header>
 <div class="rd-img"><div class="ph">{img(a['img'], L(a['t'], lang), f"object-position:{a.get('pos', '50% 50%')}", hero=True, sizes=SZ_ART)}</div></div>
 <div class="rd-body">{bhtml}{faq_html(faqs, lang)}</div>
-{promo_card(svc, lang) if svc else ''}<div class="rd-cta"><p class="d">{e(t('rd_cta', lang))}</p><div style="display:flex;flex-wrap:wrap;gap:10px"><a class="btn" href="{BOOK}" target="_blank" rel="noopener">{e(t('sh_book', lang))}</a>{wa_btn}{cta2}</div></div>
+{promo_card(svc, lang) if svc else ''}<div class="rd-cta"><p class="d">{e(t('rd_cta', lang))}</p><div style="display:flex;flex-wrap:wrap;gap:10px">{wa_btn}<a class="btn btn-o" href="{BOOK}" target="_blank" rel="noopener">{e(t('sh_book', lang))}</a>{cta2}</div></div>
 <div class="rd-next"><a href="{art_url(nx['id'], lang)}"><span class="cap mu">{e(t('rd_next', lang))}</span><span class="d">{e(L(nx['t'], lang))}</span></a></div>
 </article>'''
             author = ({'@type': 'Person', 'name': 'Roman', 'jobTitle': L(a['by'], lang)} if 'Roman' in L(a['by'], 'en')
